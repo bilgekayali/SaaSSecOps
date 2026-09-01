@@ -19,15 +19,15 @@ Completed release gate:
 - repository guard preventing `Why ...` Markdown headings;
 - compatibility and changelog foundations.
 
-### v0.3.0 — AWS Multi-Account Security Baseline
+### v0.3.0 — AWS Multi-Account Security Baseline ✅
 
-Release gate:
+Completed release gate:
 
 - reference security, logging and workload-account topology;
 - AWS Organizations/SCP examples and explicit non-claims;
 - centralized CloudTrail/log archive pattern;
-- delegated GuardDuty and Security Hub administration pattern;
-- AWS Config/security-account evidence references;
+- delegated CloudTrail, GuardDuty and Security Hub CSPM administration patterns;
+- machine-readable multi-account evidence references;
 - separation between deployable sample code and organization-specific responsibilities.
 
 ### v0.4.0 — Tenant Isolation Patterns
@@ -37,7 +37,7 @@ Release gate:
 - pooled, siloed and bridge tenancy reference patterns;
 - tenant-context propagation contract;
 - STS/session-tag or equivalent scoped-authorization examples;
-- data-layer tenant-enforcement examples;
+- data-layer tenant-enforcement requirements;
 - negative tests demonstrating cross-tenant denial;
 - isolation threat model and evidence checklist.
 
