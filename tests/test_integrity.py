@@ -3,7 +3,13 @@ import json
 import unittest
 from pathlib import Path
 
-from saassecops.integrity import IntegrityError, build_envelope, sign_envelope, verify_envelope
+from saassecops.integrity import (
+    IntegrityError,
+    build_envelope,
+    sign_envelope,
+    verify_envelope,
+    verify_payload_binding,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -28,17 +34,25 @@ class IntegrityTests(unittest.TestCase):
         )
         return sign_envelope(envelope, seed)
 
-    def test_valid_signature_and_freshness_states(self):
+    def test_valid_signature_payload_binding_and_freshness_states(self):
         envelope = self.envelope()
+        verify_payload_binding(self.payload, envelope)
         self.assertEqual(verify_envelope(envelope, self.registry, observed_at="2026-09-10T00:00:00Z")["freshness"], "current")
         self.assertEqual(verify_envelope(envelope, self.registry, observed_at="2026-09-20T00:00:00Z")["freshness"], "revalidation_due")
         self.assertEqual(verify_envelope(envelope, self.registry, observed_at="2026-10-02T00:00:00Z")["freshness"], "expired")
 
-    def test_tampering_is_rejected(self):
+    def test_envelope_tampering_is_rejected(self):
         envelope = self.envelope()
         envelope["source"]["git_sha"] = "2" * 40
         with self.assertRaises(IntegrityError):
             verify_envelope(envelope, self.registry, observed_at="2026-09-10T00:00:00Z")
+
+    def test_payload_tampering_is_rejected(self):
+        envelope = self.envelope()
+        modified = json.loads(json.dumps(self.payload))
+        modified["statement"] = "modified statement"
+        with self.assertRaises(IntegrityError):
+            verify_payload_binding(modified, envelope)
 
     def test_revoked_key_is_rejected(self):
         envelope = self.envelope("test-ed25519-revoked", REVOKED_SEED)
