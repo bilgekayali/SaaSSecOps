@@ -27,6 +27,7 @@ jobs:
         run: |
           saassecops validate examples/reference-architecture.json --kind posture
           saassecops validate policies/aws-saas-controls.json --kind policy
+          saassecops validate architecture/multi-account-reference.json --kind multi-account
           saassecops contract-snapshot
       - name: Reference assessment and evidence manifest
         run: saassecops assess examples/reference-architecture.json --policy policies/aws-saas-controls.json --output artifacts/reference-assessment.json --manifest-output artifacts/reference-manifest.json
@@ -48,12 +49,17 @@ jobs:
 
   terraform:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        directory:
+          - infra/terraform
+          - infra/organization
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
       - name: Terraform init
-        working-directory: infra/terraform
+        working-directory: ${{ matrix.directory }}
         run: terraform init -backend=false
       - name: Terraform validate
-        working-directory: infra/terraform
+        working-directory: ${{ matrix.directory }}
         run: terraform validate

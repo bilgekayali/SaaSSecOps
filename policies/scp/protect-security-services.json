@@ -1,0 +1,26 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ProtectCoreSecurityServices",
+      "Effect": "Deny",
+      "Action": [
+        "cloudtrail:StopLogging",
+        "cloudtrail:DeleteTrail",
+        "guardduty:DeleteDetector",
+        "securityhub:DisableSecurityHub",
+        "config:StopConfigurationRecorder",
+        "config:DeleteConfigurationRecorder"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "ArnNotLike": {
+          "aws:PrincipalARN": [
+            "arn:aws:iam::*:role/SaaSSecOpsSecurityAdmin",
+            "arn:aws:iam::*:role/SaaSSecOpsBreakGlass"
+          ]
+        }
+      }
+    }
+  ]
+}

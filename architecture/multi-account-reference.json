@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "reference_version": "0.3.0",
+  "is_reference_only": true,
+  "organization": {
+    "management_account": {
+      "id": "management",
+      "purpose": "AWS Organizations governance and organization-only administrative tasks",
+      "workloads_allowed": false
+    },
+    "organizational_units": [
+      {
+        "id": "Security",
+        "accounts": [
+          {
+            "id": "security-tooling",
+            "purpose": "Delegated security administration, findings aggregation and response"
+          },
+          {
+            "id": "log-archive",
+            "purpose": "Centralized security and audit log archive"
+          }
+        ]
+      },
+      {
+        "id": "Workloads",
+        "accounts": [
+          {
+            "id": "workload-prod",
+            "purpose": "Production SaaS workload"
+          },
+          {
+            "id": "workload-nonprod",
+            "purpose": "Non-production SaaS workload"
+          }
+        ]
+      }
+    ]
+  },
+  "delegated_administration": [
+    {
+      "service": "CloudTrail",
+      "administrator_account": "security-tooling",
+      "scope": "organization"
+    },
+    {
+      "service": "GuardDuty",
+      "administrator_account": "security-tooling",
+      "scope": "organization-regional"
+    },
+    {
+      "service": "SecurityHubCSPM",
+      "administrator_account": "security-tooling",
+      "scope": "organization-regional"
+    }
+  ],
+  "logging": {
+    "organization_trail": true,
+    "management_account_included": true,
+    "multi_region": true,
+    "log_file_validation": true,
+    "destination_account": "log-archive",
+    "central_archive_versioning": true,
+    "central_archive_object_lock_considered": true
+  },
+  "guardrails": [
+    "deny-leave-organization",
+    "protect-security-services"
+  ],
+  "non_claims": [
+    "This reference does not create AWS accounts or prove an AWS Organizations deployment.",
+    "Delegated-administrator declarations do not prove trusted-access or regional configuration.",
+    "Central logging declarations do not prove delivery, retention, immutability or alerting effectiveness.",
+    "SCP examples require deployment-specific review, break-glass design and testing before use."
+  ]
+}
