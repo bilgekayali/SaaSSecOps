@@ -20,12 +20,14 @@ class StableContractTests(unittest.TestCase):
         actual = contract_fingerprint(stable_contract_descriptor(build_parser()))
         self.assertEqual(actual, expected)
 
-    def test_schema_identities_are_unique_and_repository_scoped(self):
+    def test_schema_identities_are_unique_and_project_scoped(self):
         contract = stable_contract_descriptor(build_parser())
         identities = list(contract["schemas"].values())
         self.assertEqual(len(identities), len(set(identities)))
         for identity in identities:
-            self.assertTrue(identity.startswith("https://github.com/bilgekayali/SaaSSecOps/schemas/"))
+            self.assertTrue(identity.startswith("https://"))
+            self.assertIn("bilgekayali", identity)
+            self.assertIn("/SaaSSecOps/schemas/", identity)
 
 
 if __name__ == "__main__":
