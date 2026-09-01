@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.0
+
+- Promoted the verified v0.9 release candidate to the stable public boundary.
+- Retained the v0.8/v0.9 stable-contract fingerprint unchanged.
+- Added a machine-readable v1 stable release checklist and exact-source stable release verifier.
+- Added explicit RC-to-v1 contract continuity checks.
+- Added stable release documentation and final SemVer compatibility language.
+- Updated CI to build, clean-install and smoke-test the 1.0.0 wheel, generate exact-source release evidence and produce a stable-release review artifact.
+- Updated the tagged release-evidence workflow to verify v1.0.0 and emit build provenance from the exact tagged source.
+- Preserved the existing non-claims: stable status is not proof of deployment, penetration-test success, compliance, certification, independent assurance or customer acceptance.
+
 ## 0.9.0
 
 - Added v1 release-candidate review and machine-readable checklist.
