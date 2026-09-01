@@ -1,0 +1,37 @@
+{
+  "cli": {
+    "assess": {"optional_options": ["--manifest-output", "--output"], "positionals": ["posture"], "required_options": ["--policy"]},
+    "contract-snapshot": {"optional_options": [], "positionals": [], "required_options": []},
+    "digest": {"optional_options": [], "positionals": ["document"], "required_options": []},
+    "validate": {"kind_values": ["appsec", "customer-trust", "evidence-envelope", "key-registry", "manifest", "multi-account", "policy", "posture", "questionnaire", "release-manifest", "report", "tenant-isolation", "trust-exceptions", "vulnerability-evidence"], "optional_options": [], "positionals": ["document"], "required_options": ["--kind"]}
+  },
+  "contract_candidate": "1.0",
+  "executable": "saassecops",
+  "global_options": ["--version"],
+  "schemas": {
+    "appsec": "https://github.com/bilgekayali/SaaSSecOps/schemas/appsec-reference.schema.json",
+    "customer-trust": "https://bilgekayali.github.io/SaaSSecOps/schemas/customer-trust-reference.schema.json",
+    "evidence-envelope": "https://bilgekayali.github.io/SaaSSecOps/schemas/evidence-envelope.schema.json",
+    "key-registry": "https://bilgekayali.github.io/SaaSSecOps/schemas/key-registry.schema.json",
+    "manifest": "https://github.com/bilgekayali/SaaSSecOps/schemas/evidence-manifest.schema.json",
+    "multi-account": "https://github.com/bilgekayali/SaaSSecOps/schemas/multi-account-reference.schema.json",
+    "policy": "https://github.com/bilgekayali/SaaSSecOps/schemas/control-policy.schema.json",
+    "posture": "https://github.com/bilgekayali/SaaSSecOps/schemas/security-posture.schema.json",
+    "questionnaire": "https://bilgekayali.github.io/SaaSSecOps/schemas/security-questionnaire-response.schema.json",
+    "release-manifest": "https://bilgekayali.github.io/SaaSSecOps/schemas/release-manifest.schema.json",
+    "report": "https://github.com/bilgekayali/SaaSSecOps/schemas/assessment-report.schema.json",
+    "tenant-isolation": "https://github.com/bilgekayali/SaaSSecOps/schemas/tenant-isolation-reference.schema.json",
+    "trust-exceptions": "https://bilgekayali.github.io/SaaSSecOps/schemas/trust-exception-register.schema.json",
+    "vulnerability-evidence": "https://github.com/bilgekayali/SaaSSecOps/schemas/vulnerability-evidence.schema.json"
+  },
+  "semantic_invariants": {
+    "assessment_exit_codes": {"0": "pass", "2": "gaps_or_error"},
+    "assessment_identity": "deterministic_from_canonical_posture_and_policy",
+    "digest_algorithm": "SHA-256",
+    "digest_scope": "exact_file_bytes",
+    "evidence_manifest": "binds_input_policy_and_exact_report_bytes",
+    "future_schema_versions": "fail_closed",
+    "json_schema_draft": "2020-12",
+    "unsupported_contract_kind": "fail_closed"
+  }
+}

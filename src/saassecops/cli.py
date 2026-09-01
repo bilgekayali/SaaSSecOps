@@ -13,7 +13,7 @@ def _json_bytes(document: dict[str, object]) -> bytes:
     return (json.dumps(document, indent=2, sort_keys=True) + "\n").encode("utf-8")
 
 
-def main(argv: list[str] | None = None) -> int:
+def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="saassecops")
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -32,7 +32,11 @@ def main(argv: list[str] | None = None) -> int:
     digest_cmd.add_argument("document")
 
     sub.add_parser("contract-snapshot", help="Print the current CLI/schema contract snapshot.")
+    return parser
 
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
     args = parser.parse_args(argv)
 
     try:
