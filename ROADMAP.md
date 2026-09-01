@@ -19,55 +19,46 @@ SaaSSecOps reaches v1.0 when it exposes a stable, documented and machine-verifia
 - OWASP 2025/2023 mappings, secure-SDLC evidence, CodeQL, dependency audit, CycloneDX 1.7 and vulnerability evidence.
 
 ### v0.6.0 — Customer Trust & Security GTM ✅
-- evidence-bound questionnaire, architecture assurance pack, exception register, responsibility matrix and fail-closed customer-answer rules.
+- evidence-bound questionnaire, assurance pack, trust-exception register, responsibility matrix and fail-closed customer-answer rules.
 
-### v0.7.0 — Evidence Integrity & Automation
+### v0.7.0 — Evidence Integrity & Automation ✅
+- Ed25519 evidence envelopes, payload/source binding, signing-key lifecycle/revocation, evidence freshness, release checksums and build provenance workflow.
 
-Release gate:
+### v0.8.0 — Stable Public Contract Candidate ✅
 
-- Ed25519 signed evidence-envelope contract;
-- signing-key lifecycle registry with explicit active/retired/revoked states;
-- fail-closed verification for tampering and revoked keys;
-- freshness decisions for `current`, `revalidation_due` and `expired` evidence;
-- exact Git source-SHA binding in evidence and release manifests;
-- exact-byte SHA-256 checksums for built distributions and CycloneDX SBOM;
-- release-evidence CI artifact bundle;
-- tag-triggered GitHub build-provenance attestation workflow;
-- no committed production private signing key.
+Completed release gate:
 
-### v0.8.0 — Stable Public Contract Candidate
-
-Release gate:
-
-- freeze the four-command public CLI surface;
-- freeze v1 candidate JSON Schema identities;
-- explicit SemVer compatibility policy for schemas and generated evidence;
-- checked-in contract snapshot and deterministic fingerprint;
-- CI gate detecting unreviewed public-contract drift;
-- v0.x to v1 migration policy;
-- complete public non-claim inventory.
+- actual argparse command/argument surface projected into a checked public descriptor;
+- public JSON Schema `$id` values frozen into the candidate descriptor;
+- core assessment/digest/evidence semantics included in the stable boundary;
+- canonical SHA-256 contract fingerprint checked into the repository;
+- CI verifies descriptor and fingerprint on Python 3.11–3.13;
+- SemVer compatibility policy updated for the candidate boundary;
+- migration guidance added for consumers preparing for v1;
+- release evidence bundle includes the checked candidate descriptor and fingerprint.
 
 ### v0.9.0 — v1 Release Candidate
 
 Release gate:
 
 - full documentation and architecture review;
-- threat-model review across cloud, tenant isolation, AppSec, trust and evidence integrity;
-- clean package install and CLI smoke tests on the exact candidate SHA;
-- Terraform, CodeQL, dependency, SBOM and release-evidence gates green on one exact commit;
+- threat-model review across cloud, tenant, application, trust and evidence layers;
+- clean wheel install and CLI smoke tests in an isolated environment;
+- stable-contract fingerprint verified against one exact candidate SHA;
+- Terraform, dependency audit, CodeQL, SBOM, signature/integrity and contract gates green on the same SHA;
 - no unresolved repository-owned critical/high defects;
-- v1 release checklist completed against the exact candidate SHA.
+- v1 release checklist completed and source-bound to the candidate SHA.
 
 ### v1.0.0 — Stable Security Reference
 
 Release gate:
 
-- all v0.2–v0.9 control boundaries retained;
-- version, schemas, CLI and documentation aligned at `1.0.0`;
-- stable-contract fingerprint verified;
+- no new breaking public-contract change relative to the approved v0.9 candidate;
+- package/documentation/version aligned at `1.0.0`;
+- stable-contract fingerprint retained or intentionally versioned with documented migration;
 - release artifacts and provenance bound to the exact tagged source revision;
-- all mandatory CI/release gates green on the tagged commit;
-- explicit statement that stable reference status is not a deployment, certification, compliance or independent-assessment claim.
+- all mandatory release gates green on the tagged commit;
+- explicit stable-reference non-claims retained.
 
 ## v1.0 public surface target
 
@@ -75,6 +66,9 @@ Release gate:
 - `saassecops assess`
 - `saassecops digest`
 - `saassecops contract-snapshot`
-- versioned JSON Schemas
+- `saassecops --version`
+- versioned public JSON Schemas
 - deterministic assessment/evidence identity rules
-- reference Terraform and architecture documentation as non-API examples
+- exact-byte digest and evidence binding semantics
+
+Reference Terraform, diagrams, documentation prose, release scripts and internal Python modules remain non-API surfaces unless explicitly promoted.
