@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "response_set_id": "reference-enterprise-questionnaire",
+  "is_reference_only": true,
+  "customer_context": "Synthetic enterprise security review",
+  "responses": [
+    {"id": "Q-001", "question": "Is tenant data isolated between customers?", "answer": "yes", "scope": "Reference tenant-isolation design", "owner": "Security Engineering", "evidence": [{"id": "TENANT-ARCH", "type": "architecture", "location": "docs/TENANT_ISOLATION.md", "status": "available"}], "claim_strength": "documented", "review": {"status": "approved", "reviewer": "GRC", "route": null, "notes": "Reference design statement only."}, "exceptions": [], "customer_safe_answer": "The reference design requires authoritative tenant context and fail-closed tenant authorization.", "external_assurance": []},
+    {"id": "Q-002", "question": "Are penetration tests performed on the deployed service?", "answer": "needs_review", "scope": "Deployed service evidence", "owner": "Security Engineering", "evidence": [], "claim_strength": "none", "review": {"status": "needs_review", "reviewer": null, "route": "Security Engineering", "notes": "Repository cannot assert deployment-specific penetration testing."}, "exceptions": [], "customer_safe_answer": null, "external_assurance": []},
+    {"id": "Q-003", "question": "Is the service ISO 27001 certified?", "answer": "needs_review", "scope": "Certification status", "owner": "GRC", "evidence": [], "claim_strength": "none", "review": {"status": "needs_review", "reviewer": null, "route": "GRC / Legal", "notes": "Certification must be verified against current external assurance."}, "exceptions": [], "customer_safe_answer": null, "external_assurance": []}
+  ],
+  "non_claims": ["Synthetic questionnaire responses do not describe a production company or customer deployment."]
+}

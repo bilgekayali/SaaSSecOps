@@ -1,48 +1,34 @@
 # Changelog
 
+## 0.6.0
+
+- Added evidence-bound security-questionnaire response contracts.
+- Added customer trust architecture and machine-readable Security GTM responsibility model.
+- Added customer-facing security assurance pack guidance.
+- Added penetration-test/audit/security-review exception register contract.
+- Added fail-closed trust checks for unsupported affirmative, independent-assessment and certification claims.
+- Added a deterministic customer-trust summary with intentional `needs_review` reference scenarios.
+- Expanded CI and the public contract snapshot with customer-trust schemas.
+
 ## 0.5.0
 
-- Added a machine-readable application/API security reference mapped to OWASP Top 10:2025 and OWASP API Security Top 10:2023.
-- Added secure-SDLC, API edge, WAF/TLS, authorization, secrets and supply-chain reference controls.
-- Added CodeQL analysis and a dependency vulnerability-audit gate.
-- Added deterministic-shape CycloneDX 1.7 SBOM generation and verification.
-- Added a vulnerability finding/exception evidence schema with time-bounded risk acceptance.
-- Added synthetic vulnerability evidence examples and contract tests.
-- Expanded the public contract snapshot with `appsec` and `vulnerability-evidence` schemas.
+- Added OWASP Top 10:2025 and API Security Top 10:2023 application/API security references.
+- Added CodeQL, dependency audit and CycloneDX 1.7 SBOM gates.
+- Added vulnerability finding/exception evidence with time-bounded risk acceptance.
 
 ## 0.4.0
 
-- Added machine-readable pool, silo and bridge tenant-isolation patterns.
-- Added authoritative tenant-context and fail-closed authorization contracts.
-- Added an internal deterministic isolation decision engine for synthetic negative tests.
-- Added same-tenant allow and cross-tenant/missing-context/unauthorized-action denial vectors.
-- Added an AWS STS/ABAC pooled S3 prefix policy example using `aws:PrincipalTag/tenant-id`.
-- Added tenant-isolation threat analysis and deployment-evidence checklist.
-- Expanded the public contract snapshot with the `tenant-isolation` schema.
-- Added tenant-isolation vector execution to CI.
+- Added pool, silo and bridge tenant-isolation patterns and fail-closed negative vectors.
+- Added AWS STS/ABAC pooled authorization reference.
 
 ## 0.3.0
 
-- Added a machine-readable AWS multi-account reference contract and schema.
-- Added Security OU, Security Tooling, Log Archive and workload-account separation.
-- Added CloudTrail, GuardDuty and Security Hub CSPM delegated-administration guidance.
-- Added organization-trail and centralized log-custody reference model.
-- Added illustrative SCPs for organization membership and core security-service protection.
-- Added explicit opt-in Terraform for SCP creation/attachment and CI validation.
-- Expanded the public contract snapshot with the `multi-account` schema.
+- Added AWS multi-account security topology, delegated administration and SCP references.
 
 ## 0.2.0
 
-- Added strict posture, policy, assessment-report and evidence-manifest contracts.
-- Added deterministic assessment identity and exact SHA-256 evidence bindings.
-- Added `validate`, `digest` and `contract-snapshot` CLI commands.
-- Added evidence-manifest generation to `assess`.
-- Expanded CI to Python 3.11–3.13, package build and Terraform validation.
-- Added v1 roadmap and compatibility policy.
-- Added repository contract test preventing `Why ...` Markdown headings.
+- Added strict contracts, deterministic evidence identity, CI/package/Terraform gates and v1 roadmap.
 
 ## 0.1.0
 
 - Initial AWS SaaS security and trust reference architecture.
-- Added tenant isolation, IAM, network, data-protection, logging, detection, incident-response and customer-trust controls.
-- Added account-scoped Terraform baseline and deterministic local assessment demo.

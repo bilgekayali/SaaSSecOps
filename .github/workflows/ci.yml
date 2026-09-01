@@ -31,9 +31,14 @@ jobs:
           saassecops validate architecture/tenant-isolation-reference.json --kind tenant-isolation
           saassecops validate architecture/appsec-reference.json --kind appsec
           saassecops validate examples/vulnerability-evidence.json --kind vulnerability-evidence
+          saassecops validate architecture/customer-trust-reference.json --kind customer-trust
+          saassecops validate examples/security-questionnaire.json --kind questionnaire
+          saassecops validate examples/trust-exceptions.json --kind trust-exceptions
           saassecops contract-snapshot
       - name: Tenant isolation negative vectors
         run: python scripts/run_isolation_vectors.py
+      - name: Customer trust fail-closed checks
+        run: python scripts/build_customer_trust_summary.py --output artifacts/customer-trust-summary.json
       - name: Generate and verify CycloneDX SBOM
         run: |
           python scripts/generate_sbom.py --output artifacts/saassecops.cdx.json

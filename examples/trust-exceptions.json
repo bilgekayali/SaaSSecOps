@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0",
+  "register_id": "reference-trust-exceptions",
+  "is_reference_only": true,
+  "exceptions": [
+    {"id": "EX-001", "source": "security_review", "title": "Synthetic API rate-limit coverage gap", "severity": "medium", "status": "remediating", "owner": "Security Engineering", "opened_at": "2026-09-01", "due_at": "2026-10-01", "closed_at": null, "customer_impact": "potential", "disposition": "Extend rate-limit coverage and capture verification evidence.", "risk_acceptance": null, "evidence_refs": ["APPSEC-EDGE-04"]},
+    {"id": "EX-002", "source": "audit", "title": "Synthetic evidence-refresh exception", "severity": "low", "status": "risk_accepted", "owner": "GRC", "opened_at": "2026-09-01", "due_at": "2026-09-30", "closed_at": null, "customer_impact": "none_known", "disposition": "Temporary acceptance while the evidence package is refreshed.", "risk_acceptance": {"approver": "GRC Owner", "rationale": "Low-impact synthetic reference exception.", "expires_at": "2026-09-30"}, "evidence_refs": ["TRUST-EVIDENCE-01"]}
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bilgekayali.github.io/SaaSSecOps/schemas/customer-trust-reference.schema.json",
+  "title": "SaaSSecOps Customer Trust and Security GTM Reference",
+  "type": "object",
+  "required": ["schema_version", "reference_version", "is_reference_only", "decision_rules", "responsibilities", "assurance_pack", "non_claims"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "reference_version": {"const": "0.6.0"},
+    "is_reference_only": {"const": true},
+    "decision_rules": {"type": "object", "required": ["unsupported_yes_decision", "uncertain_decision", "expired_evidence_decision", "compliance_claim_requires_external_assurance"], "additionalProperties": false, "properties": {"unsupported_yes_decision": {"const": "needs_review"}, "uncertain_decision": {"const": "needs_review"}, "expired_evidence_decision": {"const": "needs_review"}, "compliance_claim_requires_external_assurance": {"const": true}}},
+    "responsibilities": {"type": "array", "minItems": 5, "items": {"type": "object", "required": ["function", "accountabilities"], "additionalProperties": false, "properties": {"function": {"enum": ["Security Engineering", "Product", "Legal", "GRC", "Security GTM"]}, "accountabilities": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}}}},
+    "assurance_pack": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["id", "title", "evidence_types"], "additionalProperties": false, "properties": {"id": {"type": "string", "minLength": 1}, "title": {"type": "string", "minLength": 1}, "evidence_types": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}}}},
+    "non_claims": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+  }
+}

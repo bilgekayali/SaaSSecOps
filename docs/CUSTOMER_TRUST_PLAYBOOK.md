@@ -1,38 +1,42 @@
 # Customer Trust Playbook
 
-The security-GTM objective is to translate verified architecture facts into clear customer-facing answers without overstating assurance.
+## Objective
 
-## Tenant isolation question
+Translate verified security facts into concise customer-facing answers without overstating architecture, implementation, testing, independent assurance or certification.
 
-**Customer question:** How do you prevent one customer from accessing another customer's data?
+## Evidence hierarchy
 
-A strong answer should describe:
+1. documented design;
+2. deployed/configured evidence;
+3. tested operating evidence;
+4. independent assessment;
+5. certification.
 
-- the tenancy model;
-- how tenant identity/context is established;
-- where tenant isolation is enforced;
-- whether credentials and resource policies are tenant scoped;
-- what independent testing or review evidence exists;
-- material limitations or exceptions.
-
-Saying only “we use AWS IAM” or “data is encrypted” does not prove tenant isolation.
-
-## Audit logging question
-
-A strong answer should identify relevant telemetry sources, retention/access controls, integrity protections, monitoring ownership and the distinction between configured capability and tested operational effectiveness.
-
-## Encryption question
-
-Clarify encryption in transit, encryption at rest, the services/data classes covered, key ownership and lifecycle, customer-managed-key support where relevant, and known exceptions.
+A stronger answer requires stronger evidence. The existence of an AWS service, control mapping, SBOM or local test does not automatically justify a stronger customer claim.
 
 ## Questionnaire workflow
 
-1. Parse the precise question and scope.
-2. Map it to an architecture/control owner.
+1. Parse the exact question, scope and implied claim strength.
+2. Assign the accountable owner.
 3. Retrieve current evidence.
-4. Answer only to the strength of that evidence.
-5. Record assumptions and exceptions.
-6. Route uncertainty to Security Engineering, Product, Legal or GRC.
-7. Revalidate after architecture or evidence changes.
+4. Set the answer to `needs_review` when evidence is missing, stale or ambiguous.
+5. Draft customer-safe wording only to the strength of the evidence.
+6. Link material exceptions and known limitations.
+7. Obtain review from the appropriate function.
+8. Revalidate after architecture, evidence or contractual scope changes.
 
-This demonstrates a repeatable customer-trust process; it is not an approved communications policy for any real company.
+## Tenant isolation
+
+A customer answer should identify the tenancy pattern, source of tenant context, enforcement points, scoped authorization and relevant test evidence. “We use AWS IAM” or “data is encrypted” does not establish tenant isolation.
+
+## Vulnerabilities and penetration testing
+
+Distinguish repository scanning from production vulnerability management and independent penetration testing. Findings and exceptions require accountable owners and explicit status. A penetration-test statement requires current environment-specific evidence.
+
+## Certification and compliance
+
+Do not convert a control mapping into a compliance or certification statement. `certified` and `independently_assessed` claims require current external assurance evidence.
+
+## Boundary
+
+This playbook is a reference operating model. It is not an approved communications policy for a real company and does not authorize customer, contractual or regulatory commitments.

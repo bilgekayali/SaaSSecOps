@@ -20,6 +20,9 @@ SCHEMA_FILES = {
     "tenant-isolation": "tenant-isolation-reference.schema.json",
     "appsec": "appsec-reference.schema.json",
     "vulnerability-evidence": "vulnerability-evidence.schema.json",
+    "customer-trust": "customer-trust-reference.schema.json",
+    "questionnaire": "security-questionnaire-response.schema.json",
+    "trust-exceptions": "trust-exception-register.schema.json",
 }
 
 
@@ -35,7 +38,10 @@ def schema_document(kind: str) -> dict[str, Any]:
 def validate_document(document: dict[str, Any], kind: str) -> None:
     schema = schema_document(kind)
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
-    errors = sorted(validator.iter_errors(document), key=lambda error: list(error.absolute_path))
+    errors = sorted(
+        validator.iter_errors(document),
+        key=lambda error: [str(part) for part in error.absolute_path],
+    )
     if not errors:
         return
     first = errors[0]
@@ -47,11 +53,17 @@ def contract_snapshot(version: str) -> dict[str, Any]:
     return {
         "tool": {"name": "SaaSSecOps", "version": version},
         "commands": ["assess", "contract-snapshot", "digest", "validate"],
-        "schemas": {kind: schema_document(kind)["$id"] for kind in sorted(SCHEMA_FILES)},
+        "schemas": {
+            kind: schema_document(kind)["$id"]
+            for kind in sorted(SCHEMA_FILES)
+        },
         "assessment_schema_version": "1.0",
         "evidence_manifest_schema_version": "1.0",
         "multi_account_schema_version": "1.0",
         "tenant_isolation_schema_version": "1.0",
         "appsec_schema_version": "1.0",
         "vulnerability_evidence_schema_version": "1.0",
+        "customer_trust_schema_version": "1.0",
+        "questionnaire_schema_version": "1.0",
+        "trust_exception_schema_version": "1.0",
     }

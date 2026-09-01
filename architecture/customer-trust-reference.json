@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "reference_version": "0.6.0",
+  "is_reference_only": true,
+  "decision_rules": {
+    "unsupported_yes_decision": "needs_review",
+    "uncertain_decision": "needs_review",
+    "expired_evidence_decision": "needs_review",
+    "compliance_claim_requires_external_assurance": true
+  },
+  "responsibilities": [
+    {"function": "Security Engineering", "accountabilities": ["Own technical security architecture facts and deployment evidence.", "Confirm remediation state for technical findings."]},
+    {"function": "Product", "accountabilities": ["Confirm product behavior, tenancy features and roadmap commitments.", "Avoid representing planned capability as current capability."]},
+    {"function": "Legal", "accountabilities": ["Review contractual, privacy and regulatory commitments.", "Approve language that creates legal or contractual obligations."]},
+    {"function": "GRC", "accountabilities": ["Own control mappings, audit evidence and approved policy/control statements.", "Track assurance scope, evidence freshness and exceptions."]},
+    {"function": "Security GTM", "accountabilities": ["Translate approved facts into customer-facing security answers.", "Route unsupported or ambiguous questions to the accountable function."]}
+  ],
+  "assurance_pack": [
+    {"id": "ARCH-01", "title": "SaaS security architecture", "evidence_types": ["architecture", "configuration"]},
+    {"id": "TENANT-01", "title": "Tenant isolation assurance", "evidence_types": ["architecture", "test"]},
+    {"id": "APPSEC-01", "title": "Application and API security", "evidence_types": ["test", "report"]},
+    {"id": "LOG-01", "title": "Audit logging and detection", "evidence_types": ["configuration", "report"]},
+    {"id": "VULN-01", "title": "Vulnerability and exception lifecycle", "evidence_types": ["report", "policy"]}
+  ],
+  "non_claims": [
+    "The reference pack is not a customer-specific attestation.",
+    "A documented control is not evidence of operating effectiveness.",
+    "Certification or independent-assessment claims require external assurance evidence."
+  ]
+}
