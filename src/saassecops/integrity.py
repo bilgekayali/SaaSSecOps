@@ -41,7 +41,28 @@ def _parse_timestamp(value: str) -> datetime:
     return parsed.astimezone(timezone.utc)
 
 
+def validate_key_registry_semantics(registry: dict[str, Any]) -> None:
+    seen: set[str] = set()
+    for key in registry.get("keys", []):
+        key_id = key.get("key_id", "")
+        if key_id in seen:
+            raise IntegrityError(f"duplicate key_id: {key_id}")
+        seen.add(key_id)
+
+        valid_from = _parse_timestamp(key["valid_from"])
+        valid_until = _parse_timestamp(key["valid_until"]) if key.get("valid_until") else None
+        if valid_until and valid_until < valid_from:
+            raise IntegrityError(f"key {key_id} has invalid validity window")
+
+        if key.get("status") == "revoked":
+            if not key.get("revoked_at") or not key.get("revocation_reason"):
+                raise IntegrityError(f"revoked key {key_id} requires revocation metadata")
+        elif key.get("revoked_at") or key.get("revocation_reason"):
+            raise IntegrityError(f"non-revoked key {key_id} cannot carry revocation metadata")
+
+
 def _key_record(registry: dict[str, Any], key_id: str) -> dict[str, Any]:
+    validate_key_registry_semantics(registry)
     for record in registry.get("keys", []):
         if record.get("key_id") == key_id:
             return record
