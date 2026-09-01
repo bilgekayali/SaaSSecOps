@@ -28,7 +28,10 @@ jobs:
           saassecops validate examples/reference-architecture.json --kind posture
           saassecops validate policies/aws-saas-controls.json --kind policy
           saassecops validate architecture/multi-account-reference.json --kind multi-account
+          saassecops validate architecture/tenant-isolation-reference.json --kind tenant-isolation
           saassecops contract-snapshot
+      - name: Tenant isolation negative vectors
+        run: python scripts/run_isolation_vectors.py
       - name: Reference assessment and evidence manifest
         run: saassecops assess examples/reference-architecture.json --policy policies/aws-saas-controls.json --output artifacts/reference-assessment.json --manifest-output artifacts/reference-manifest.json
       - name: Validate generated evidence
