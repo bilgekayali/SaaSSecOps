@@ -1,0 +1,47 @@
+{
+  "candidate_version": "0.9.0",
+  "non_claims": [
+    "Release-candidate status does not prove an AWS deployment exists.",
+    "Release-candidate status is not a penetration-test, compliance, certification or independent-assurance result.",
+    "The repository defect register does not prove the absence of undiscovered defects."
+  ],
+  "required_documents": [
+    "README.md",
+    "COMPATIBILITY.md",
+    "ROADMAP.md",
+    "SECURITY.md",
+    "docs/ARCHITECTURE.md",
+    "docs/APPLICATION_API_SECURITY.md",
+    "docs/TENANT_ISOLATION.md",
+    "docs/MULTI_ACCOUNT_BASELINE.md",
+    "docs/CUSTOMER_TRUST_PLAYBOOK.md",
+    "docs/EVIDENCE_INTEGRITY.md",
+    "docs/THREAT_MODEL.md",
+    "docs/RELEASE_CANDIDATE_REVIEW.md",
+    "docs/MIGRATION_TO_V1.md"
+  ],
+  "required_external_gates": [
+    "CodeQL workflow succeeds on the same candidate SHA"
+  ],
+  "required_repository_gates": [
+    "unit_and_repository_contract_tests",
+    "stable_public_contract_candidate",
+    "public_contract_validation",
+    "tenant_isolation_negative_vectors",
+    "customer_trust_fail_closed_checks",
+    "evidence_signature_freshness_revocation",
+    "cyclonedx_1_7_sbom",
+    "dependency_vulnerability_audit",
+    "reference_assessment_evidence_manifest",
+    "risky_assessment_fail_closed",
+    "package_build",
+    "clean_wheel_install",
+    "cli_smoke_outside_source_tree",
+    "exact_source_release_manifest",
+    "terraform_account_validate",
+    "terraform_organization_validate",
+    "release_candidate_review"
+  ],
+  "schema_version": "1.0",
+  "stable_contract_sha256": "d12b26f57701507934e88ed561546255694d72485b6c30dc29bab2944847cf94"
+}
