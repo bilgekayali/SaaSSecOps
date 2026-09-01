@@ -2,7 +2,7 @@
 
 ## Summary
 
-SaaSSecOps reaches v1.0 when it exposes a stable, documented and machine-verifiable AWS SaaS security reference contract. Version numbers represent completed control boundaries; they do not imply deployment, certification or independent assessment.
+SaaSSecOps reaches v1.0 when it exposes a stable, documented and machine-verifiable AWS SaaS security reference contract. Version numbers represent completed repository/control boundaries; they do not imply deployment, certification or independent assessment.
 
 ## Milestones
 
@@ -27,36 +27,36 @@ SaaSSecOps reaches v1.0 when it exposes a stable, documented and machine-verifia
 ### v0.8.0 — Stable Public Contract Candidate ✅
 - actual CLI/parser projection, frozen schema identities, SemVer candidate policy, migration guidance and SHA-256 contract fingerprint.
 
-### v0.9.0 — v1 Release Candidate
+### v0.9.0 — v1 Release Candidate ✅
+- expanded threat-model review, isolated wheel install, exact-head-SHA evidence binding, blocker register, pinned Actions, CodeQL v4 and Terraform 1.16.0 validation.
 
-Release gate:
+### v1.0.0 — Stable Security Reference ✅
 
-- expanded threat-model review across cloud/organization, tenant isolation, AppSec/API, software supply chain, customer trust, evidence integrity and incident response;
-- isolated wheel install and CLI smoke tests outside the source checkout;
-- machine-readable release-candidate checklist and exact-SHA review artifact;
-- repository-owned critical/high blocker register with fail-closed release policy;
-- stable-contract fingerprint retained unchanged from v0.8;
-- Python 3.11–3.13, Terraform 1.16.0, dependency, SBOM and release-evidence gates green on one candidate SHA;
-- CodeQL green on the same candidate SHA;
-- critical GitHub Actions pinned to reviewed commit SHAs.
-
-### v1.0.0 — Stable Security Reference
-
-Release gate:
+Stable promotion gate:
 
 - all v0.2–v0.9 control boundaries retained;
-- version, schemas, CLI and documentation aligned at `1.0.0`;
-- stable-contract fingerprint verified;
-- release artifacts and provenance bound to the exact tagged source revision;
-- all mandatory CI/release gates green on the tagged commit;
-- explicit statement that stable reference status is not a deployment, certification, compliance or independent-assessment claim.
+- package version and documentation aligned at `1.0.0`;
+- v0.9 RC fingerprint retained unchanged;
+- stable-release checklist and exact-SHA repository review pass;
+- Python 3.11–3.13, public contract, tenant-isolation, customer-trust, evidence-integrity, SBOM, dependency and packaging gates green;
+- clean wheel install and CLI smoke outside the source checkout;
+- both Terraform roots validate with Terraform 1.16.0;
+- CodeQL green on the same source SHA;
+- no known repository-owned open critical/high release blockers;
+- `v1.0.0` tag applied to the verified `main` commit;
+- tagged release-evidence workflow rebuilds from the exact tag source and emits build provenance.
 
-## v1.0 public surface target
+## v1.0 stable public surface
 
 - `saassecops validate`
 - `saassecops assess`
 - `saassecops digest`
 - `saassecops contract-snapshot`
-- versioned JSON Schemas
+- checked public JSON Schema identities
 - deterministic assessment/evidence identity rules
+- exact-byte SHA-256 and evidence-binding semantics
 - reference Terraform and architecture documentation as non-API examples
+
+## Post-v1 policy
+
+v1.x may add backward-compatible functionality while preserving the checked stable boundary. Incompatible CLI/schema/semantic changes require a future major release unless a versioned parallel contract is introduced. Security fixes may tighten validation when necessary to prevent unsafe acceptance, with migration guidance where the behavior affects existing consumers.

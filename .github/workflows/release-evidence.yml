@@ -50,12 +50,12 @@ jobs:
             --sbom artifacts/saassecops.cdx.json \
             --output artifacts/release-manifest.json
           saassecops validate artifacts/release-manifest.json --kind release-manifest
-      - name: Release-candidate review
-        if: github.ref_name == 'v0.9.0'
+      - name: Stable release review
+        if: github.ref_name == 'v1.0.0'
         run: |
-          python scripts/verify_release_candidate.py \
+          python scripts/verify_stable_release.py \
             --source-sha "$GITHUB_SHA" \
-            --output artifacts/v1-rc-review.json
+            --output artifacts/v1-stable-review.json
       - name: Attest build provenance
         uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4
         with:
@@ -68,9 +68,10 @@ jobs:
             dist/
             artifacts/saassecops.cdx.json
             artifacts/release-manifest.json
-            artifacts/v1-rc-review.json
+            artifacts/v1-stable-review.json
             contracts/v1-candidate.json
             contracts/v1-candidate.sha256
+            release/v1-stable-checklist.json
             release/v1-rc-checklist.json
             release/defect-register.json
           if-no-files-found: error
