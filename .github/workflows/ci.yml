@@ -34,11 +34,16 @@ jobs:
           saassecops validate architecture/customer-trust-reference.json --kind customer-trust
           saassecops validate examples/security-questionnaire.json --kind questionnaire
           saassecops validate examples/trust-exceptions.json --kind trust-exceptions
+          saassecops validate examples/key-registry.json --kind key-registry
           saassecops contract-snapshot
       - name: Tenant isolation negative vectors
         run: python scripts/run_isolation_vectors.py
       - name: Customer trust fail-closed checks
         run: python scripts/build_customer_trust_summary.py --output artifacts/customer-trust-summary.json
+      - name: Evidence signature freshness and revocation gates
+        run: |
+          python scripts/run_evidence_integrity.py
+          saassecops validate artifacts/evidence-envelope.json --kind evidence-envelope
       - name: Generate and verify CycloneDX SBOM
         run: |
           python scripts/generate_sbom.py --output artifacts/saassecops.cdx.json
@@ -65,6 +70,28 @@ jobs:
         run: |
           python -m pip install build
           python -m build
+      - name: Bind release artifacts to exact source
+        if: matrix.python-version == '3.12'
+        run: |
+          python scripts/generate_release_manifest.py \
+            --version 0.7.0 \
+            --source-sha "$GITHUB_SHA" \
+            --artifact-dir dist \
+            --sbom artifacts/saassecops.cdx.json \
+            --output artifacts/release-manifest.json
+          saassecops validate artifacts/release-manifest.json --kind release-manifest
+      - name: Upload release evidence bundle
+        if: matrix.python-version == '3.12'
+        uses: actions/upload-artifact@v4
+        with:
+          name: saassecops-release-evidence-${{ github.sha }}
+          path: |
+            dist/
+            artifacts/saassecops.cdx.json
+            artifacts/release-manifest.json
+            artifacts/evidence-envelope.json
+            artifacts/evidence-integrity-summary.json
+          if-no-files-found: error
 
   terraform:
     runs-on: ubuntu-latest
