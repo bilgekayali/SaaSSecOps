@@ -17,6 +17,7 @@ SCHEMA_FILES = {
     "report": "assessment-report.schema.json",
     "manifest": "evidence-manifest.schema.json",
     "multi-account": "multi-account-reference.schema.json",
+    "tenant-isolation": "tenant-isolation-reference.schema.json",
 }
 
 
@@ -48,4 +49,5 @@ def contract_snapshot(version: str) -> dict[str, Any]:
         "assessment_schema_version": "1.0",
         "evidence_manifest_schema_version": "1.0",
         "multi_account_schema_version": "1.0",
+        "tenant_isolation_schema_version": "1.0",
     }
