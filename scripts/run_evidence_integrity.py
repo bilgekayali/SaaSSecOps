@@ -7,7 +7,13 @@ import os
 from pathlib import Path
 
 from saassecops.contracts import validate_document
-from saassecops.integrity import IntegrityError, build_envelope, sign_envelope, verify_envelope
+from saassecops.integrity import (
+    IntegrityError,
+    build_envelope,
+    sign_envelope,
+    verify_envelope,
+    verify_payload_binding,
+)
 
 
 TEST_KEY_ID = "test-ed25519-2026-01"
@@ -46,6 +52,7 @@ def main() -> int:
     )
     envelope = sign_envelope(envelope, TEST_KEY_SEED)
     validate_document(envelope, "evidence-envelope")
+    verify_payload_binding(payload, envelope)
 
     current = verify_envelope(envelope, registry, observed_at="2026-09-10T00:00:00Z")
     revalidation_due = verify_envelope(envelope, registry, observed_at="2026-09-20T00:00:00Z")
@@ -53,11 +60,19 @@ def main() -> int:
 
     tampered = json.loads(json.dumps(envelope))
     tampered["payload_sha256"] = "0" * 64
-    tamper_rejected = False
+    envelope_tamper_rejected = False
     try:
         verify_envelope(tampered, registry, observed_at="2026-09-10T00:00:00Z")
     except IntegrityError:
-        tamper_rejected = True
+        envelope_tamper_rejected = True
+
+    modified_payload = json.loads(json.dumps(payload))
+    modified_payload["statement"] = "tampered synthetic statement"
+    payload_tamper_rejected = False
+    try:
+        verify_payload_binding(modified_payload, envelope)
+    except IntegrityError:
+        payload_tamper_rejected = True
 
     revoked_envelope = build_envelope(
         payload=payload,
@@ -81,7 +96,7 @@ def main() -> int:
         raise SystemExit("expected revalidation_due evidence")
     if expired["freshness"] != "expired":
         raise SystemExit("expected expired evidence")
-    if not tamper_rejected or not revoked_rejected:
+    if not envelope_tamper_rejected or not payload_tamper_rejected or not revoked_rejected:
         raise SystemExit("negative integrity test did not fail closed")
 
     summary = {
@@ -91,7 +106,8 @@ def main() -> int:
         "current_status": current["freshness"],
         "revalidation_status": revalidation_due["freshness"],
         "expired_status": expired["freshness"],
-        "tamper_rejected": tamper_rejected,
+        "envelope_tamper_rejected": envelope_tamper_rejected,
+        "payload_tamper_rejected": payload_tamper_rejected,
         "revoked_key_rejected": revoked_rejected,
         "private_key_persisted": False,
     }
