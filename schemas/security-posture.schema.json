@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SaaSSecOps Security Posture",
+  "type": "object",
+  "required": ["architecture_id","tenant_isolation","iam","network","data_protection","logging","detection","incident_response","customer_trust"],
+  "properties": {
+    "architecture_id": {"type": "string", "minLength": 1},
+    "is_reference_only": {"type": "boolean"},
+    "tenant_isolation": {"$ref": "#/$defs/booleanMap"},
+    "iam": {"$ref": "#/$defs/booleanMap"},
+    "network": {"$ref": "#/$defs/booleanMap"},
+    "data_protection": {"$ref": "#/$defs/booleanMap"},
+    "logging": {"$ref": "#/$defs/booleanMap"},
+    "detection": {"$ref": "#/$defs/booleanMap"},
+    "incident_response": {"$ref": "#/$defs/booleanMap"},
+    "customer_trust": {"$ref": "#/$defs/booleanMap"}
+  },
+  "$defs": {
+    "booleanMap": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "boolean"}}
+  }
+}

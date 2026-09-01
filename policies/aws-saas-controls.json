@@ -1,0 +1,32 @@
+{
+  "policy_id": "aws-saas-security-reference-v0.1",
+  "title": "AWS SaaS Security Reference Controls",
+  "controls": [
+    {"id":"TENANT-01","family":"TENANT","title":"Tenant context is propagated","path":"tenant_isolation.tenant_context_propagated","expected":true,"rationale":"Authenticated tenant context must survive service boundaries."},
+    {"id":"TENANT-02","family":"TENANT","title":"Cross-tenant access is denied","path":"tenant_isolation.cross_tenant_deny_enforced","expected":true,"rationale":"Tenant isolation is a foundational SaaS security boundary."},
+    {"id":"TENANT-03","family":"TENANT","title":"Workload credentials are tenant scoped","path":"tenant_isolation.tenant_scoped_credentials","expected":true,"rationale":"Scoped sessions reduce broad resource access."},
+    {"id":"TENANT-04","family":"TENANT","title":"Data access enforces tenant identity","path":"tenant_isolation.data_layer_tenant_enforcement","expected":true,"rationale":"Data-layer controls reduce reliance on application-only checks."},
+    {"id":"IAM-01","family":"IAM","title":"Human access uses federation","path":"iam.federated_human_access","expected":true,"rationale":"Federation reduces long-lived workforce IAM users."},
+    {"id":"IAM-02","family":"IAM","title":"Workloads use short-lived credentials","path":"iam.short_lived_workload_credentials","expected":true,"rationale":"Short-lived credentials reduce persistent exposure."},
+    {"id":"IAM-03","family":"IAM","title":"Least-privilege review is performed","path":"iam.least_privilege_review","expected":true,"rationale":"Permissions should be periodically constrained."},
+    {"id":"IAM-04","family":"IAM","title":"IAM Access Analyzer is enabled","path":"iam.access_analyzer_enabled","expected":true,"rationale":"Access Analyzer surfaces unintended access."},
+    {"id":"NET-01","family":"NET","title":"Application workloads are private","path":"network.private_application_tier","expected":true,"rationale":"Internet exposure should be concentrated at managed ingress."},
+    {"id":"NET-02","family":"NET","title":"Datastores are private","path":"network.private_datastores","expected":true,"rationale":"Tenant data should not require direct public reachability."},
+    {"id":"NET-03","family":"NET","title":"VPC Flow Logs are enabled","path":"network.vpc_flow_logs_enabled","expected":true,"rationale":"Network telemetry supports investigation."},
+    {"id":"DATA-01","family":"DATA","title":"TLS is enforced","path":"data_protection.tls_enforced","expected":true,"rationale":"Data should be protected in transit."},
+    {"id":"DATA-02","family":"DATA","title":"Encryption at rest is enabled","path":"data_protection.encryption_at_rest","expected":true,"rationale":"Persistent sensitive data should use managed encryption."},
+    {"id":"DATA-03","family":"DATA","title":"Audit evidence uses customer-managed KMS","path":"data_protection.customer_managed_kms_for_audit","expected":true,"rationale":"Separately governed audit encryption improves visibility."},
+    {"id":"DATA-04","family":"DATA","title":"Secrets are managed outside source","path":"data_protection.managed_secrets","expected":true,"rationale":"Secrets should not live in repositories or images."},
+    {"id":"LOG-01","family":"LOG","title":"CloudTrail is multi-Region","path":"logging.cloudtrail_multi_region","expected":true,"rationale":"Multi-Region logging reduces audit blind spots."},
+    {"id":"LOG-02","family":"LOG","title":"CloudTrail validation is enabled","path":"logging.cloudtrail_log_validation","expected":true,"rationale":"Validation supports integrity-aware audit review."},
+    {"id":"LOG-03","family":"LOG","title":"Audit archive is private and versioned","path":"logging.private_versioned_audit_archive","expected":true,"rationale":"Audit evidence should resist casual overwrite or public exposure."},
+    {"id":"DET-01","family":"DET","title":"GuardDuty is enabled","path":"detection.guardduty_enabled","expected":true,"rationale":"Managed detection adds account and workload signals."},
+    {"id":"DET-02","family":"DET","title":"Security Hub is enabled","path":"detection.security_hub_enabled","expected":true,"rationale":"Centralized findings support posture workflows."},
+    {"id":"DET-03","family":"DET","title":"Findings have an owned response route","path":"detection.findings_response_route","expected":true,"rationale":"Detection needs ownership and escalation."},
+    {"id":"IR-01","family":"IR","title":"Incident-response roles are defined","path":"incident_response.roles_defined","expected":true,"rationale":"Security events need clear responsibility."},
+    {"id":"IR-02","family":"IR","title":"Response playbooks are exercised","path":"incident_response.playbooks_exercised","expected":true,"rationale":"Untested response should not be treated as demonstrated."},
+    {"id":"TRUST-01","family":"TRUST","title":"Architecture evidence is maintained","path":"customer_trust.architecture_evidence_maintained","expected":true,"rationale":"Customer claims should be grounded in reviewable evidence."},
+    {"id":"TRUST-02","family":"TRUST","title":"Questionnaire answers require evidence","path":"customer_trust.questionnaire_answers_evidence_bound","expected":true,"rationale":"Trust workflows should not convert assumptions into yes answers."},
+    {"id":"TRUST-03","family":"TRUST","title":"Security exceptions have accountable owners","path":"customer_trust.exceptions_have_owners","expected":true,"rationale":"Exceptions should remain visible and owned."}
+  ]
+}
