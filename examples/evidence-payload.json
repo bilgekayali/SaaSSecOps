@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0",
+  "evidence_id": "synthetic-control-evidence-001",
+  "control": "LOG-01",
+  "statement": "Synthetic reference evidence for deterministic signing tests only.",
+  "scope": "repository-test-only",
+  "production_claim": false
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "keys": [
+    {
+      "key_id": "test-ed25519-2026-01",
+      "algorithm": "Ed25519",
+      "public_key_b64": "J8iTh4eZciGkPJMJS+sIKDdLPSrFJDB5Q+qzu8d9pyo=",
+      "status": "active",
+      "valid_from": "2026-01-01T00:00:00Z",
+      "valid_until": "2027-01-01T00:00:00Z",
+      "revoked_at": null,
+      "revocation_reason": null,
+      "scope": "synthetic repository tests only"
+    },
+    {
+      "key_id": "test-ed25519-revoked",
+      "algorithm": "Ed25519",
+      "public_key_b64": "8x3ZybRISwPEsdegCg41qBrnXhMVhZWhdEEBHoTwE8E=",
+      "status": "revoked",
+      "valid_from": "2026-01-01T00:00:00Z",
+      "valid_until": "2027-01-01T00:00:00Z",
+      "revoked_at": "2026-06-01T00:00:00Z",
+      "revocation_reason": "synthetic negative-test key",
+      "scope": "synthetic repository tests only"
+    }
+  ]
+}

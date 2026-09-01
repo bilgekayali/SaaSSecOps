@@ -2,29 +2,33 @@
 
 **AWS SaaS Security & Trust Reference Architecture**
 
-SaaSSecOps is an open-source reference architecture and local assurance toolkit for multi-tenant SaaS security on AWS. It connects tenant isolation, application/API security, software supply-chain evidence, cloud controls and customer-trust workflows in one inspectable project.
+SaaSSecOps is an open-source reference architecture and local assurance toolkit for multi-tenant SaaS security on AWS. It connects tenant isolation, application/API security, software supply-chain controls, customer-trust workflows and evidence integrity in one inspectable project.
 
 > [!IMPORTANT]
 > This repository is a **reference architecture and portfolio demonstration**. It does not prove that any AWS environment or SaaS application has been deployed, independently assessed, penetration tested, certified or approved for production.
 
-Current package milestone: **v0.6.0 — Customer Trust & Security GTM**.
+Current package milestone: **v0.7.0 — Evidence Integrity & Automation**.
 
 ## Summary
 
-v0.6 extends the security-control reference into customer trust. Security questionnaire answers, architecture assurance statements and exceptions are represented as machine-readable contracts. Affirmative answers require evidence, stronger claims require stronger assurance, and unresolved questions remain `needs_review`.
+v0.7 adds cryptographic and lifecycle controls around repository evidence. Evidence envelopes bind canonical payload digests to an exact source revision, Ed25519 signing-key identity and explicit freshness windows. CI verifies signatures, rejects revoked keys and tampering, generates source-bound release manifests and packages SBOM/release evidence for review.
 
-## Security assurance flow
+## Evidence integrity flow
 
 ```mermaid
 flowchart LR
-    ARCH[Architecture + controls] --> EVIDENCE[Current evidence]
-    EVIDENCE --> Q[Customer question]
-    Q --> DECIDE{Evidence sufficient?}
-    DECIDE -->|yes| ANSWER[Bounded customer-safe answer]
-    DECIDE -->|no / uncertain| REVIEW[needs_review]
-    REVIEW --> OWNER[Security Eng / Product / Legal / GRC]
-    EX[Exceptions] --> ANSWER
-    ANSWER --> GTM[Security GTM]
+    SRC[Exact Git SHA] --> ENV[Evidence envelope]
+    PAYLOAD[Canonical evidence payload] --> HASH[SHA-256]
+    HASH --> ENV
+    ENV --> SIGN[Ed25519 signature]
+    KEYS[Key registry / revocation] --> VERIFY[Verification]
+    SIGN --> VERIFY
+    VERIFY --> FRESH{Freshness}
+    FRESH --> CURRENT[current]
+    FRESH --> REVAL[revalidation_due]
+    FRESH --> EXPIRED[expired]
+    DIST[Built artifacts + SBOM] --> REL[Release manifest]
+    SRC --> REL
 ```
 
 ## Included
@@ -34,12 +38,15 @@ flowchart LR
 - OWASP Top 10:2025 and OWASP API Security Top 10:2023 risk mappings.
 - CodeQL, dependency audit and CycloneDX 1.7 SBOM gates.
 - Vulnerability finding and time-bounded exception evidence.
-- Evidence-bound security-questionnaire response contract.
-- Customer trust reference contract and architecture assurance pack.
-- Pen-test/audit/security-review exception register.
-- Security Engineering / Product / Legal / GRC / Security GTM responsibility matrix.
-- Fail-closed rules for unsupported `yes`, certification and independent-assessment claims.
-- Deterministic assessment/evidence identity and validated Terraform references.
+- Evidence-bound security-questionnaire and Security GTM control model.
+- Customer-facing assurance pack and trust-exception register.
+- Ed25519 signed evidence-envelope contract.
+- Public signing-key registry with active/retired/revoked lifecycle states.
+- Fail-closed tamper and revoked-key verification tests.
+- `current`, `revalidation_due` and `expired` evidence decisions.
+- Exact-source release manifest with SHA-256 checksums for distribution artifacts and SBOM.
+- CI release-evidence bundle and tag-triggered build-provenance workflow.
+- Python 3.11–3.13, Terraform, CodeQL and repository contract gates.
 
 ## Quickstart
 
@@ -47,27 +54,37 @@ flowchart LR
 python -m pip install -e .
 ```
 
-Validate the trust contracts:
+Validate key lifecycle metadata:
 
 ```bash
-saassecops validate architecture/customer-trust-reference.json --kind customer-trust
-saassecops validate examples/security-questionnaire.json --kind questionnaire
-saassecops validate examples/trust-exceptions.json --kind trust-exceptions
+saassecops validate examples/key-registry.json --kind key-registry
 ```
 
-Run the fail-closed customer trust reference:
+Run signature, tamper, revocation and freshness gates:
 
 ```bash
-python scripts/build_customer_trust_summary.py --output artifacts/customer-trust-summary.json
+python scripts/run_evidence_integrity.py
+saassecops validate artifacts/evidence-envelope.json --kind evidence-envelope
 ```
 
-The synthetic questionnaire deliberately contains deployment-specific and certification questions that cannot be proven by this repository, so they remain `needs_review`.
+Build a source-bound release manifest after package/SBOM generation:
 
-## Customer trust model
+```bash
+python -m build
+python scripts/generate_sbom.py --output artifacts/saassecops.cdx.json
+python scripts/generate_release_manifest.py \
+  --version 0.7.0 \
+  --source-sha <40-character-git-sha> \
+  --artifact-dir dist \
+  --sbom artifacts/saassecops.cdx.json \
+  --output artifacts/release-manifest.json
+```
 
-Evidence strength is separated into `documented`, `configured`, `tested`, `independently_assessed` and `certified`. A repository design can support a documented reference statement; it cannot by itself justify production, independent-assessment or certification claims.
+See [Evidence Integrity](docs/EVIDENCE_INTEGRITY.md) and [Evidence Signing Key Lifecycle](docs/KEY_LIFECYCLE.md).
 
-See [Customer Trust Playbook](docs/CUSTOMER_TRUST_PLAYBOOK.md), [Security Assurance Pack](docs/SECURITY_ASSURANCE_PACK.md), and [Security GTM Responsibility Matrix](docs/SECURITY_GTM_RESPONSIBILITY_MATRIX.md).
+## Key-management boundary
+
+No production private signing key is committed to this repository. CI derives a deterministic **synthetic test-only** Ed25519 seed in memory so verification is reproducible. Real private keys belong in an approved external signing boundary such as an HSM, KMS or protected signing service with independent access, rotation and revocation controls.
 
 ## Release direction
 
@@ -75,7 +92,7 @@ The path to v1.0 is evidence-gated rather than date-gated. Release criteria are 
 
 ## Explicit non-claims
 
-SaaSSecOps does **not** establish deployed security effectiveness, vulnerability absence, penetration-test success, certification, regulatory compliance, contractual acceptance or customer approval. Synthetic tests and generated evidence demonstrate repository invariants only.
+SaaSSecOps does **not** establish deployed security effectiveness, production key custody, vulnerability absence, penetration-test success, certification, regulatory compliance, contractual acceptance or customer approval. Cryptographic verification proves only that the signed reference envelope has not changed under the modeled key lifecycle; it does not prove the truth or operational effectiveness of the underlying security claim.
 
 ## Author
 

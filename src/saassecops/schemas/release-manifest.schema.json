@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bilgekayali.github.io/SaaSSecOps/schemas/release-manifest.schema.json",
+  "title": "SaaSSecOps Release Evidence Manifest",
+  "type": "object",
+  "required": ["schema_version", "version", "source_sha", "artifacts", "generated_by"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "source_sha": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+    "generated_by": {"const": "SaaSSecOps"},
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["path", "sha256", "size_bytes"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+          "size_bytes": {"type": "integer", "minimum": 0},
+          "media_type": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "sbom": {
+      "type": ["object", "null"],
+      "properties": {
+        "path": {"type": "string"},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "format": {"const": "CycloneDX"},
+        "spec_version": {"const": "1.7"}
+      },
+      "required": ["path", "sha256", "format", "spec_version"],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

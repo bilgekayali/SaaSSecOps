@@ -1,0 +1,55 @@
+name: Release Evidence
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+
+jobs:
+  release-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install build tooling
+        run: |
+          python -m pip install -e .
+          python -m pip install build
+      - name: Test exact tagged source
+        run: python -m unittest discover -s tests -v
+      - name: Build distribution
+        run: python -m build
+      - name: Generate CycloneDX SBOM
+        run: |
+          python scripts/generate_sbom.py --output artifacts/saassecops.cdx.json
+          python scripts/verify_sbom.py artifacts/saassecops.cdx.json
+      - name: Generate release manifest
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          python scripts/generate_release_manifest.py \
+            --version "$VERSION" \
+            --source-sha "$GITHUB_SHA" \
+            --artifact-dir dist \
+            --sbom artifacts/saassecops.cdx.json \
+            --output artifacts/release-manifest.json
+          saassecops validate artifacts/release-manifest.json --kind release-manifest
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v4
+        with:
+          subject-path: "dist/*"
+      - name: Upload release evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-evidence-${{ github.ref_name }}-${{ github.sha }}
+          path: |
+            dist/
+            artifacts/saassecops.cdx.json
+            artifacts/release-manifest.json
+          if-no-files-found: error
