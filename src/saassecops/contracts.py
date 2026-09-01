@@ -23,6 +23,9 @@ SCHEMA_FILES = {
     "customer-trust": "customer-trust-reference.schema.json",
     "questionnaire": "security-questionnaire-response.schema.json",
     "trust-exceptions": "trust-exception-register.schema.json",
+    "evidence-envelope": "evidence-envelope.schema.json",
+    "key-registry": "key-registry.schema.json",
+    "release-manifest": "release-manifest.schema.json",
 }
 
 
@@ -66,4 +69,7 @@ def contract_snapshot(version: str) -> dict[str, Any]:
         "customer_trust_schema_version": "1.0",
         "questionnaire_schema_version": "1.0",
         "trust_exception_schema_version": "1.0",
+        "evidence_envelope_schema_version": "1.0",
+        "key_registry_schema_version": "1.0",
+        "release_manifest_schema_version": "1.0",
     }
