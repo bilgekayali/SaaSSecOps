@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.7.0
+
+- Added Ed25519 signed evidence envelopes bound to canonical payload digests and exact Git source revisions.
+- Added public signing-key lifecycle registry with active, retired and revoked states.
+- Added fail-closed verification for tampering and revoked signing keys.
+- Added explicit evidence freshness decisions: `current`, `revalidation_due` and `expired`.
+- Added exact-source release manifests with SHA-256 checksums for distributions and CycloneDX SBOM.
+- Added CI release-evidence bundle generation and tagged build-provenance workflow.
+- Added synthetic deterministic signing tests without committing production private-key material.
+- Expanded the public contract snapshot with evidence-envelope, key-registry and release-manifest schemas.
+
 ## 0.6.0
 
 - Added evidence-bound security-questionnaire response contracts.
