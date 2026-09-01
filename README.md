@@ -7,7 +7,7 @@ SaaSSecOps is an open-source reference architecture and local assurance demo for
 > [!IMPORTANT]
 > This repository is a **reference architecture and portfolio demonstration**. It does not prove that any AWS environment has been deployed, independently assessed, penetration tested, certified or approved for production. The included Terraform is an account-scoped reference baseline and must be reviewed, adapted and tested before any real deployment.
 
-## Why this project exists
+## Summary
 
 Security assurance for SaaS customers is rarely just one control. A credible security story has to connect architecture, tenant isolation, IAM, network boundaries, encryption, telemetry, detection, incident response and evidence that can be explained to technical and non-technical stakeholders.
 
