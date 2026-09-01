@@ -26,6 +26,13 @@ def payload_sha256(payload: Any) -> str:
     return sha256_hex(canonical_json_bytes(payload))
 
 
+def verify_payload_binding(payload: Any, envelope: dict[str, Any]) -> None:
+    expected = envelope.get("payload_sha256")
+    actual = payload_sha256(payload)
+    if expected != actual:
+        raise IntegrityError("payload digest does not match evidence envelope")
+
+
 def _parse_timestamp(value: str) -> datetime:
     text = value.replace("Z", "+00:00")
     parsed = datetime.fromisoformat(text)
@@ -97,11 +104,11 @@ def verify_envelope(
     if key.get("status") == "revoked":
         raise IntegrityError("signing key is revoked")
 
-    observed = _parse_timestamp(observed_at)
+    issued = _parse_timestamp(envelope["freshness"]["issued_at"])
     valid_from = _parse_timestamp(key["valid_from"])
     valid_until = _parse_timestamp(key["valid_until"]) if key.get("valid_until") else None
-    if observed < valid_from or (valid_until and observed > valid_until):
-        raise IntegrityError("signing key is outside its validity window")
+    if issued < valid_from or (valid_until and issued > valid_until):
+        raise IntegrityError("signing key was outside its signing-validity window")
 
     try:
         public_key = Ed25519PublicKey.from_public_bytes(base64.b64decode(key["public_key_b64"], validate=True))
