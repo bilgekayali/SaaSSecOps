@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.0
+
+- Added machine-readable pool, silo and bridge tenant-isolation patterns.
+- Added authoritative tenant-context and fail-closed authorization contracts.
+- Added an internal deterministic isolation decision engine for synthetic negative tests.
+- Added same-tenant allow and cross-tenant/missing-context/unauthorized-action denial vectors.
+- Added an AWS STS/ABAC pooled S3 prefix policy example using `aws:PrincipalTag/tenant-id`.
+- Added tenant-isolation threat analysis and deployment-evidence checklist.
+- Expanded the public contract snapshot with the `tenant-isolation` schema.
+- Added tenant-isolation vector execution to CI.
+
 ## 0.3.0
 
 - Added a machine-readable AWS multi-account reference contract and schema.
