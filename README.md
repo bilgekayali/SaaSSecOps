@@ -2,105 +2,80 @@
 
 **AWS SaaS Security & Trust Reference Architecture**
 
-SaaSSecOps is an open-source reference architecture and local assurance toolkit for reasoning about security in a multi-tenant SaaS environment on AWS. It connects tenant isolation, identity, application/API security, software supply-chain evidence, network boundaries, encryption, audit logging, threat detection and customer-trust evidence in one inspectable project.
+SaaSSecOps is an open-source reference architecture and local assurance toolkit for multi-tenant SaaS security on AWS. It connects tenant isolation, application/API security, software supply-chain evidence, cloud controls and customer-trust workflows in one inspectable project.
 
 > [!IMPORTANT]
-> This repository is a **reference architecture and portfolio demonstration**. It does not prove that any AWS environment or SaaS application has been deployed, independently assessed, penetration tested, certified or approved for production. Reference controls must be reviewed, adapted and tested before real deployment.
+> This repository is a **reference architecture and portfolio demonstration**. It does not prove that any AWS environment or SaaS application has been deployed, independently assessed, penetration tested, certified or approved for production.
 
-Current package milestone: **v0.5.0 — Application & API Security**.
+Current package milestone: **v0.6.0 — Customer Trust & Security GTM**.
 
 ## Summary
 
-SaaSSecOps models a SaaS security assurance story through machine-readable contracts, deterministic evidence, multi-account security boundaries, explicit tenant isolation and application/API security gates.
+v0.6 extends the security-control reference into customer trust. Security questionnaire answers, architecture assurance statements and exceptions are represented as machine-readable contracts. Affirmative answers require evidence, stronger claims require stronger assurance, and unresolved questions remain `needs_review`.
 
-## Security architecture
+## Security assurance flow
 
 ```mermaid
 flowchart LR
-    IDP[Identity] --> EDGE[Managed API edge / WAF]
-    EDGE --> APP[Application services]
-    APP --> AUTHZ[Tenant + object/function authorization]
-    AUTHZ --> DATA[Tenant-bound data]
-    APP --> SECRETS[Managed secrets]
-    APP --> LOG[Security telemetry]
-    CODE[Source + dependencies] --> SAST[CodeQL / dependency audit]
-    SAST --> SBOM[CycloneDX 1.7 SBOM]
-    SBOM --> EVIDENCE[Release security evidence]
+    ARCH[Architecture + controls] --> EVIDENCE[Current evidence]
+    EVIDENCE --> Q[Customer question]
+    Q --> DECIDE{Evidence sufficient?}
+    DECIDE -->|yes| ANSWER[Bounded customer-safe answer]
+    DECIDE -->|no / uncertain| REVIEW[needs_review]
+    REVIEW --> OWNER[Security Eng / Product / Legal / GRC]
+    EX[Exceptions] --> ANSWER
+    ANSWER --> GTM[Security GTM]
 ```
-
-The multi-account model separates Security Tooling and Log Archive accounts from workloads. The tenant-isolation reference represents pool, silo and bridge patterns with fail-closed negative vectors. v0.5 adds OWASP-aligned web/API controls and supply-chain gates. See [Application and API Security](docs/APPLICATION_API_SECURITY.md).
 
 ## Included
 
-- AWS multi-account security/logging reference with delegated security administration.
+- AWS multi-account security/logging reference with delegated administration.
 - Pool, silo and bridge tenant-isolation contracts and negative cross-tenant tests.
-- AWS STS/ABAC pooled authorization reference using `tenant-id`.
 - OWASP Top 10:2025 and OWASP API Security Top 10:2023 risk mappings.
-- Secure-SDLC evidence requirements for threat modeling, review, testing and finding disposition.
-- API edge/WAF/TLS/rate-limit/schema-validation/authorization reference controls.
-- Managed-secret and least-privilege secret-access requirements.
-- CodeQL code-scanning workflow and dependency vulnerability audit.
-- CycloneDX 1.7 SBOM generation and structural verification.
-- Vulnerability evidence contract with accountable ownership and time-bounded risk acceptance.
-- Strict JSON Schema contracts for the public reference surfaces.
-- Deterministic assessment identity and SHA-256 evidence bindings.
-- Terraform validation for account and organization reference baselines.
-- Threat models, control matrix, customer-trust playbook and versioned v1 roadmap.
+- CodeQL, dependency audit and CycloneDX 1.7 SBOM gates.
+- Vulnerability finding and time-bounded exception evidence.
+- Evidence-bound security-questionnaire response contract.
+- Customer trust reference contract and architecture assurance pack.
+- Pen-test/audit/security-review exception register.
+- Security Engineering / Product / Legal / GRC / Security GTM responsibility matrix.
+- Fail-closed rules for unsupported `yes`, certification and independent-assessment claims.
+- Deterministic assessment/evidence identity and validated Terraform references.
 
 ## Quickstart
-
-Install locally:
 
 ```bash
 python -m pip install -e .
 ```
 
-Validate reference contracts:
+Validate the trust contracts:
 
 ```bash
-saassecops validate architecture/multi-account-reference.json --kind multi-account
-saassecops validate architecture/tenant-isolation-reference.json --kind tenant-isolation
-saassecops validate architecture/appsec-reference.json --kind appsec
-saassecops validate examples/vulnerability-evidence.json --kind vulnerability-evidence
+saassecops validate architecture/customer-trust-reference.json --kind customer-trust
+saassecops validate examples/security-questionnaire.json --kind questionnaire
+saassecops validate examples/trust-exceptions.json --kind trust-exceptions
 ```
 
-Run tenant isolation tests and generate an SBOM:
+Run the fail-closed customer trust reference:
 
 ```bash
-python scripts/run_isolation_vectors.py
-python scripts/generate_sbom.py --output artifacts/saassecops.cdx.json
-python scripts/verify_sbom.py artifacts/saassecops.cdx.json
+python scripts/build_customer_trust_summary.py --output artifacts/customer-trust-summary.json
 ```
 
-Generate a reference assessment and exact-byte evidence manifest:
+The synthetic questionnaire deliberately contains deployment-specific and certification questions that cannot be proven by this repository, so they remain `needs_review`.
 
-```bash
-saassecops assess examples/reference-architecture.json --policy policies/aws-saas-controls.json --output artifacts/reference-assessment.json --manifest-output artifacts/reference-manifest.json
-```
+## Customer trust model
 
-Run tests:
+Evidence strength is separated into `documented`, `configured`, `tested`, `independently_assessed` and `certified`. A repository design can support a documented reference statement; it cannot by itself justify production, independent-assessment or certification claims.
 
-```bash
-python -m unittest discover -s tests -v
-```
+See [Customer Trust Playbook](docs/CUSTOMER_TRUST_PLAYBOOK.md), [Security Assurance Pack](docs/SECURITY_ASSURANCE_PACK.md), and [Security GTM Responsibility Matrix](docs/SECURITY_GTM_RESPONSIBILITY_MATRIX.md).
 
 ## Release direction
 
-The path to v1.0 is evidence-gated rather than date-gated. Milestones and release criteria are maintained in [ROADMAP.md](ROADMAP.md), with compatibility expectations in [COMPATIBILITY.md](COMPATIBILITY.md).
-
-## Reference standards
-
-- AWS Well-Architected SaaS Lens: https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/saas-lens.html
-- AWS Security Reference Architecture: https://docs.aws.amazon.com/prescriptive-guidance/latest/security-reference-architecture/welcome.html
-- OWASP Top 10:2025: https://owasp.org/Top10/2025/
-- OWASP API Security Top 10:2023: https://owasp.org/API-Security/editions/2023/en/0x11-t10/
-- CycloneDX: https://cyclonedx.org/specification/overview/
-
-A passing repository assessment does not establish AWS Well-Architected conformance, OWASP compliance, SOC 2 compliance, ISO 27001 certification, regulatory compliance, production security or customer acceptance.
+The path to v1.0 is evidence-gated rather than date-gated. Release criteria are maintained in [ROADMAP.md](ROADMAP.md), with compatibility expectations in [COMPATIBILITY.md](COMPATIBILITY.md).
 
 ## Explicit non-claims
 
-SaaSSecOps does **not** by itself establish effective deployed tenant isolation, correct AWS IAM evaluation, secure API behavior, vulnerability absence, penetration-test success, production monitoring effectiveness, regulatory compliance or customer acceptance. Synthetic tests and generated evidence demonstrate repository invariants only.
+SaaSSecOps does **not** establish deployed security effectiveness, vulnerability absence, penetration-test success, certification, regulatory compliance, contractual acceptance or customer approval. Synthetic tests and generated evidence demonstrate repository invariants only.
 
 ## Author
 

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bilgekayali.github.io/SaaSSecOps/schemas/trust-exception-register.schema.json",
+  "title": "SaaSSecOps Customer Trust Exception Register",
+  "type": "object",
+  "required": ["schema_version", "register_id", "is_reference_only", "exceptions"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "register_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{2,63}$"},
+    "is_reference_only": {"const": true},
+    "exceptions": {"type": "array", "items": {"$ref": "#/$defs/exception"}}
+  },
+  "$defs": {
+    "exception": {"type": "object", "required": ["id", "source", "title", "severity", "status", "owner", "opened_at", "customer_impact", "disposition"], "additionalProperties": false, "properties": {"id": {"type": "string", "pattern": "^EX-[0-9]{3,}$"}, "source": {"enum": ["penetration_test", "audit", "security_review", "vulnerability", "architecture_review", "other"]}, "title": {"type": "string", "minLength": 1}, "severity": {"enum": ["critical", "high", "medium", "low", "informational"]}, "status": {"enum": ["open", "remediating", "risk_accepted", "closed"]}, "owner": {"type": "string", "minLength": 1}, "opened_at": {"type": "string", "format": "date"}, "due_at": {"type": ["string", "null"], "format": "date"}, "closed_at": {"type": ["string", "null"], "format": "date"}, "customer_impact": {"enum": ["none_known", "potential", "confirmed", "unknown"]}, "disposition": {"type": "string", "minLength": 1}, "risk_acceptance": {"type": ["object", "null"], "additionalProperties": false, "properties": {"approver": {"type": "string", "minLength": 1}, "rationale": {"type": "string", "minLength": 1}, "expires_at": {"type": "string", "format": "date"}}, "required": ["approver", "rationale", "expires_at"]}, "evidence_refs": {"type": "array", "items": {"type": "string", "minLength": 1}}}, "allOf": [{"if": {"properties": {"status": {"const": "risk_accepted"}}, "required": ["status"]}, "then": {"properties": {"risk_acceptance": {"type": "object"}}}}, {"if": {"properties": {"status": {"const": "closed"}}, "required": ["status"]}, "then": {"properties": {"closed_at": {"type": "string", "format": "date"}}}}]}
+  }
+}

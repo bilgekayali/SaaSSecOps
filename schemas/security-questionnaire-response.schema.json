@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bilgekayali.github.io/SaaSSecOps/schemas/security-questionnaire-response.schema.json",
+  "title": "SaaSSecOps Security Questionnaire Response",
+  "type": "object",
+  "required": ["schema_version", "response_set_id", "is_reference_only", "responses", "non_claims"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "response_set_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{2,63}$"},
+    "is_reference_only": {"const": true},
+    "customer_context": {"type": "string", "minLength": 1},
+    "responses": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/response"}},
+    "non_claims": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+  },
+  "$defs": {
+    "evidence_ref": {"type": "object", "required": ["id", "type", "location", "status"], "additionalProperties": false, "properties": {"id": {"type": "string", "minLength": 1}, "type": {"enum": ["architecture", "configuration", "test", "audit", "penetration_test", "policy", "report", "other"]}, "location": {"type": "string", "minLength": 1}, "status": {"enum": ["available", "restricted", "pending"]}, "observed_at": {"type": "string", "format": "date-time"}}},
+    "response": {"type": "object", "required": ["id", "question", "answer", "scope", "owner", "evidence", "claim_strength", "review"], "additionalProperties": false, "properties": {"id": {"type": "string", "pattern": "^Q-[0-9]{3,}$"}, "question": {"type": "string", "minLength": 1}, "answer": {"enum": ["yes", "no", "partial", "not_applicable", "needs_review"]}, "scope": {"type": "string", "minLength": 1}, "owner": {"type": "string", "minLength": 1}, "evidence": {"type": "array", "items": {"$ref": "#/$defs/evidence_ref"}}, "claim_strength": {"enum": ["none", "documented", "configured", "tested", "independently_assessed", "certified"]}, "review": {"type": "object", "required": ["status"], "additionalProperties": false, "properties": {"status": {"enum": ["draft", "approved", "needs_review"]}, "reviewer": {"type": ["string", "null"]}, "route": {"type": ["string", "null"]}, "notes": {"type": ["string", "null"]}}}, "exceptions": {"type": "array", "items": {"type": "string", "pattern": "^EX-[0-9]{3,}$"}}, "customer_safe_answer": {"type": ["string", "null"]}, "external_assurance": {"type": "array", "items": {"$ref": "#/$defs/evidence_ref"}}}, "allOf": [{"if": {"properties": {"answer": {"enum": ["yes", "partial"]}}, "required": ["answer"]}, "then": {"properties": {"evidence": {"minItems": 1}}}}, {"if": {"properties": {"answer": {"const": "needs_review"}}, "required": ["answer"]}, "then": {"properties": {"review": {"properties": {"status": {"const": "needs_review"}, "route": {"type": "string", "minLength": 1}}}}}}, {"if": {"properties": {"review": {"properties": {"status": {"const": "approved"}}}}, "required": ["review"]}, "then": {"properties": {"review": {"properties": {"reviewer": {"type": "string", "minLength": 1}}}}}}, {"if": {"properties": {"claim_strength": {"enum": ["independently_assessed", "certified"]}}, "required": ["claim_strength"]}, "then": {"required": ["external_assurance"], "properties": {"external_assurance": {"minItems": 1}}}}]}
+  }
+}
