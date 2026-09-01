@@ -37,9 +37,9 @@ def main() -> int:
     registry = _load(args.registry)
     validate_document(registry, "key-registry")
 
-    source_sha = os.environ.get("GITHUB_SHA", "0" * 40)
+    source_sha = os.environ.get("SAASSECOPS_SOURCE_SHA") or os.environ.get("GITHUB_SHA", "0" * 40)
     if len(source_sha) != 40 or any(ch not in "0123456789abcdef" for ch in source_sha.lower()):
-        raise SystemExit("GITHUB_SHA must be a 40-character hexadecimal commit SHA")
+        raise SystemExit("evidence source SHA must be a 40-character hexadecimal commit SHA")
 
     envelope = build_envelope(
         payload=payload,
