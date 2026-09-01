@@ -2,16 +2,18 @@
 
 **AWS SaaS Security & Trust Reference Architecture**
 
-SaaSSecOps is an open-source reference architecture and local assurance demo for reasoning about security in a multi-tenant SaaS environment on AWS. It connects tenant isolation, identity, network boundaries, encryption, audit logging, threat detection, security posture management and customer-trust evidence in one inspectable project.
+SaaSSecOps is an open-source reference architecture and local assurance toolkit for reasoning about security in a multi-tenant SaaS environment on AWS. It connects tenant isolation, identity, network boundaries, encryption, audit logging, threat detection, security posture management and customer-trust evidence in one inspectable project.
 
 > [!IMPORTANT]
 > This repository is a **reference architecture and portfolio demonstration**. It does not prove that any AWS environment has been deployed, independently assessed, penetration tested, certified or approved for production. The included Terraform is an account-scoped reference baseline and must be reviewed, adapted and tested before any real deployment.
+
+Current package milestone: **v0.2.0 — Contract & Evidence Foundation**.
 
 ## Summary
 
 Security assurance for SaaS customers is rarely just one control. A credible security story has to connect architecture, tenant isolation, IAM, network boundaries, encryption, telemetry, detection, incident response and evidence that can be explained to technical and non-technical stakeholders.
 
-SaaSSecOps models that connection explicitly and generates a deterministic assurance report from a declared architecture posture.
+SaaSSecOps models that connection explicitly through strict machine-readable contracts, deterministic assessment identity and evidence manifests.
 
 ## Reference architecture
 
@@ -43,30 +45,48 @@ Production SaaS systems may use pooled, siloed or hybrid isolation depending on 
 - CloudTrail multi-Region logging and log-file validation.
 - GuardDuty and Security Hub detective controls.
 - Account-scoped Terraform reference for CloudTrail, KMS, S3 log archive, GuardDuty, Security Hub and Access Analyzer.
-- Deterministic local assurance CLI producing `pass`, `gap` and `not_applicable` evidence.
-- Threat model, control matrix and customer-trust playbook.
+- Strict JSON Schema contracts for posture, policy, assessment report and evidence manifest.
+- Deterministic assessment identity plus SHA-256 bindings for posture, policy and exact report bytes.
+- CLI commands for validation, assessment, file digests and contract snapshots.
+- Threat model, control matrix, customer-trust playbook and versioned v1 roadmap.
 
 ## Quickstart
 
+Install locally:
+
 ```bash
-PYTHONPATH=src python -m saassecops assess \
-  examples/reference-architecture.json \
-  --policy policies/aws-saas-controls.json \
-  --output artifacts/reference-assessment.json
+python -m pip install -e .
 ```
 
-Risky example:
+Validate the declared posture and policy:
 
 ```bash
-PYTHONPATH=src python -m saassecops assess \
-  examples/risky-architecture.json \
-  --policy policies/aws-saas-controls.json
+saassecops validate examples/reference-architecture.json --kind posture
+saassecops validate policies/aws-saas-controls.json --kind policy
+```
+
+Generate a report and exact-byte evidence manifest:
+
+```bash
+saassecops assess examples/reference-architecture.json --policy policies/aws-saas-controls.json --output artifacts/reference-assessment.json --manifest-output artifacts/reference-manifest.json
+```
+
+The risky example intentionally exits with code `2` because declared gaps are present:
+
+```bash
+saassecops assess examples/risky-architecture.json --policy policies/aws-saas-controls.json
+```
+
+Inspect the current public contract:
+
+```bash
+saassecops contract-snapshot
 ```
 
 Run tests:
 
 ```bash
-PYTHONPATH=src python -m unittest discover -s tests -v
+python -m unittest discover -s tests -v
 ```
 
 ## Control families
@@ -81,6 +101,10 @@ PYTHONPATH=src python -m unittest discover -s tests -v
 | DET | Threat detection and security posture visibility |
 | IR | Response ownership, escalation and tested playbooks |
 | TRUST | Architecture and assurance evidence suitable for customer conversations |
+
+## Release direction
+
+The path to v1.0 is evidence-gated rather than date-gated. The staged milestones and release criteria are maintained in [ROADMAP.md](ROADMAP.md), with compatibility expectations in [COMPATIBILITY.md](COMPATIBILITY.md).
 
 ## AWS guidance posture
 
