@@ -30,13 +30,13 @@ Completed release gate:
 - machine-readable multi-account evidence references;
 - separation between deployable sample code and organization-specific responsibilities.
 
-### v0.4.0 — Tenant Isolation Patterns
+### v0.4.0 — Tenant Isolation Patterns ✅
 
-Release gate:
+Completed release gate:
 
 - pooled, siloed and bridge tenancy reference patterns;
 - tenant-context propagation contract;
-- STS/session-tag or equivalent scoped-authorization examples;
+- STS/session-tag scoped-authorization example;
 - data-layer tenant-enforcement requirements;
 - negative tests demonstrating cross-tenant denial;
 - isolation threat model and evidence checklist.
@@ -45,12 +45,12 @@ Release gate:
 
 Release gate:
 
-- OWASP Top 10 and API Security control family;
+- OWASP Top 10:2025 and API Security Top 10:2023 control family;
 - secure-SDLC evidence model;
 - API edge/WAF/TLS/secrets reference controls;
-- dependency and code scanning gates;
-- CycloneDX SBOM generation;
-- vulnerability finding/exception evidence references.
+- CodeQL and dependency-audit gates;
+- CycloneDX 1.7 SBOM generation and verification;
+- vulnerability finding/exception evidence contract.
 
 ### v0.6.0 — Customer Trust & Security GTM
 

@@ -29,9 +29,20 @@ jobs:
           saassecops validate policies/aws-saas-controls.json --kind policy
           saassecops validate architecture/multi-account-reference.json --kind multi-account
           saassecops validate architecture/tenant-isolation-reference.json --kind tenant-isolation
+          saassecops validate architecture/appsec-reference.json --kind appsec
+          saassecops validate examples/vulnerability-evidence.json --kind vulnerability-evidence
           saassecops contract-snapshot
       - name: Tenant isolation negative vectors
         run: python scripts/run_isolation_vectors.py
+      - name: Generate and verify CycloneDX SBOM
+        run: |
+          python scripts/generate_sbom.py --output artifacts/saassecops.cdx.json
+          python scripts/verify_sbom.py artifacts/saassecops.cdx.json
+      - name: Dependency vulnerability audit
+        if: matrix.python-version == '3.12'
+        run: |
+          python -m pip install pip-audit
+          pip-audit -r requirements-audit.txt --strict
       - name: Reference assessment and evidence manifest
         run: saassecops assess examples/reference-architecture.json --policy policies/aws-saas-controls.json --output artifacts/reference-assessment.json --manifest-output artifacts/reference-manifest.json
       - name: Validate generated evidence

@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.0
+
+- Added a machine-readable application/API security reference mapped to OWASP Top 10:2025 and OWASP API Security Top 10:2023.
+- Added secure-SDLC, API edge, WAF/TLS, authorization, secrets and supply-chain reference controls.
+- Added CodeQL analysis and a dependency vulnerability-audit gate.
+- Added deterministic-shape CycloneDX 1.7 SBOM generation and verification.
+- Added a vulnerability finding/exception evidence schema with time-bounded risk acceptance.
+- Added synthetic vulnerability evidence examples and contract tests.
+- Expanded the public contract snapshot with `appsec` and `vulnerability-evidence` schemas.
+
 ## 0.4.0
 
 - Added machine-readable pool, silo and bridge tenant-isolation patterns.

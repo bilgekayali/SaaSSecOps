@@ -4,7 +4,7 @@ import json
 from importlib.resources import files
 from typing import Any
 
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator, FormatChecker
 
 
 class ContractError(ValueError):
@@ -18,6 +18,8 @@ SCHEMA_FILES = {
     "manifest": "evidence-manifest.schema.json",
     "multi-account": "multi-account-reference.schema.json",
     "tenant-isolation": "tenant-isolation-reference.schema.json",
+    "appsec": "appsec-reference.schema.json",
+    "vulnerability-evidence": "vulnerability-evidence.schema.json",
 }
 
 
@@ -32,7 +34,7 @@ def schema_document(kind: str) -> dict[str, Any]:
 
 def validate_document(document: dict[str, Any], kind: str) -> None:
     schema = schema_document(kind)
-    validator = Draft202012Validator(schema)
+    validator = Draft202012Validator(schema, format_checker=FormatChecker())
     errors = sorted(validator.iter_errors(document), key=lambda error: list(error.absolute_path))
     if not errors:
         return
@@ -50,4 +52,6 @@ def contract_snapshot(version: str) -> dict[str, Any]:
         "evidence_manifest_schema_version": "1.0",
         "multi_account_schema_version": "1.0",
         "tenant_isolation_schema_version": "1.0",
+        "appsec_schema_version": "1.0",
+        "vulnerability_evidence_schema_version": "1.0",
     }
