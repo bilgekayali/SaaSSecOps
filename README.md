@@ -7,19 +7,19 @@ SaaSSecOps is an open-source reference architecture and local assurance toolkit 
 > [!IMPORTANT]
 > This repository is a **reference architecture and portfolio demonstration**. It does not prove that any AWS environment or SaaS application has been deployed, independently assessed, penetration tested, certified or approved for production.
 
-Current package milestone: **v0.8.0 — Stable Public Contract Candidate**.
+Current package milestone: **v0.9.0 — v1 Release Candidate**.
 
 ## Summary
 
-v0.8 freezes the first candidate for the v1 public contract. The actual argparse command surface, public JSON Schema `$id` values and core evidence semantics are projected into a checked descriptor and bound to a canonical SHA-256 fingerprint. CI fails if that stable candidate changes without an explicit compatibility decision.
+v0.9 is the release-candidate hardening pass. The v1 public-contract candidate from v0.8 remains unchanged while the repository is tested as a distributable package from one exact source revision. CI now includes clean wheel installation outside the source tree, CLI smoke testing, exact-source release evidence, a machine-readable release checklist, repository blocker register and expanded threat-model review.
 
-The candidate fingerprint is:
+The frozen v1 candidate fingerprint remains:
 
 `sha256:d12b26f57701507934e88ed561546255694d72485b6c30dc29bab2944847cf94`
 
-## Stable contract boundary
+## Release-candidate boundary
 
-The candidate includes:
+The candidate keeps the existing public surface:
 
 - `saassecops assess <posture> --policy <policy> [--output ...] [--manifest-output ...]`
 - `saassecops validate <document> --kind <public-contract-kind>`
@@ -34,6 +34,28 @@ The candidate includes:
 
 The checked descriptor is [contracts/v1-candidate.json](contracts/v1-candidate.json), with its digest in [contracts/v1-candidate.sha256](contracts/v1-candidate.sha256).
 
+## v0.9 release gates
+
+The release-candidate review requires:
+
+- Python 3.11–3.13 tests;
+- stable-contract fingerprint verification;
+- all public contract validations;
+- tenant-isolation negative vectors;
+- customer-trust fail-closed checks;
+- evidence signature, payload-binding, freshness and revocation gates;
+- CycloneDX 1.7 SBOM generation and verification;
+- strict dependency vulnerability audit;
+- package build;
+- **clean wheel install in an isolated virtual environment**;
+- CLI smoke tests executed outside the checkout;
+- exact-source release manifest;
+- both Terraform roots validated using Terraform 1.16.0;
+- CodeQL on the same candidate SHA;
+- repository-owned critical/high blocker gate.
+
+See [v1 Release Candidate Review](docs/RELEASE_CANDIDATE_REVIEW.md).
+
 ## Security and evidence layers
 
 - AWS multi-account security/logging reference with delegated administration.
@@ -47,32 +69,19 @@ The checked descriptor is [contracts/v1-candidate.json](contracts/v1-candidate.j
 - Active/retired/revoked signing-key lifecycle and fail-closed revocation checks.
 - `current`, `revalidation_due` and `expired` evidence decisions.
 - Exact-source release manifest and release-evidence bundle.
-- Python 3.11–3.13, Terraform and CodeQL validation.
+- Stable contract descriptor/fingerprint and explicit compatibility policy.
 
 ## Quickstart
 
 ```bash
 python -m pip install -e .
 python scripts/verify_stable_contract.py
+python scripts/verify_release_candidate.py \
+  --source-sha 0000000000000000000000000000000000000000 \
+  --output artifacts/v1-rc-review.json
 ```
 
-Validate a public contract:
-
-```bash
-saassecops validate examples/reference-architecture.json --kind posture
-```
-
-Inspect the package contract snapshot:
-
-```bash
-saassecops contract-snapshot
-```
-
-Verify the exact bytes of a file:
-
-```bash
-saassecops digest contracts/v1-candidate.json
-```
+The zero SHA above is only a local structural example. CI supplies the exact GitHub candidate SHA.
 
 Run repository tests:
 
@@ -92,11 +101,11 @@ No production private signing key is committed to this repository. CI uses deter
 
 ## Release direction
 
-The remaining path is intentionally narrow: v0.9 performs the v1 release-candidate review against one exact SHA; v1.0 promotes the already verified stable contract rather than introducing a new feature set. See [ROADMAP.md](ROADMAP.md).
+v0.9 is intended to be the final pre-v1 candidate. v1.0 should promote the already verified stable contract rather than introduce a new feature set. See [ROADMAP.md](ROADMAP.md).
 
 ## Explicit non-claims
 
-SaaSSecOps does **not** establish deployed security effectiveness, production key custody, vulnerability absence, penetration-test success, certification, regulatory compliance, contractual acceptance or customer approval. Cryptographic verification and a stable contract fingerprint prove repository integrity/compatibility properties only; they do not prove the truth or operational effectiveness of underlying security claims.
+SaaSSecOps does **not** establish deployed security effectiveness, production key custody, vulnerability absence, penetration-test success, certification, regulatory compliance, contractual acceptance or customer approval. Release-candidate status, cryptographic verification and a stable contract fingerprint prove repository quality/integrity properties only; they do not prove the truth or operational effectiveness of underlying security claims.
 
 ## Author
 
