@@ -1,0 +1,104 @@
+{
+  "schema_version": "1.0",
+  "reference_version": "0.5.0",
+  "is_reference_only": true,
+  "standards": {
+    "owasp_top10": {
+      "version": "2025",
+      "risks": [
+        "A01:2025 Broken Access Control",
+        "A02:2025 Security Misconfiguration",
+        "A03:2025 Software Supply Chain Failures",
+        "A04:2025 Cryptographic Failures",
+        "A05:2025 Injection",
+        "A06:2025 Insecure Design",
+        "A07:2025 Authentication Failures",
+        "A08:2025 Software or Data Integrity Failures",
+        "A09:2025 Security Logging and Alerting Failures",
+        "A10:2025 Mishandling of Exceptional Conditions"
+      ]
+    },
+    "owasp_api_security_top10": {
+      "version": "2023",
+      "risks": [
+        "API1:2023 Broken Object Level Authorization",
+        "API2:2023 Broken Authentication",
+        "API3:2023 Broken Object Property Level Authorization",
+        "API4:2023 Unrestricted Resource Consumption",
+        "API5:2023 Broken Function Level Authorization",
+        "API6:2023 Unrestricted Access to Sensitive Business Flows",
+        "API7:2023 Server Side Request Forgery",
+        "API8:2023 Security Misconfiguration",
+        "API9:2023 Improper Inventory Management",
+        "API10:2023 Unsafe Consumption of APIs"
+      ]
+    }
+  },
+  "secure_sdlc": {
+    "threat_model_required": true,
+    "peer_review_required": true,
+    "security_tests_required": true,
+    "static_analysis_required": true,
+    "dependency_audit_required": true,
+    "sbom_required": true,
+    "critical_high_findings_require_resolution_or_approved_exception": true
+  },
+  "edge_and_api": {
+    "managed_ingress_required": true,
+    "waf_reference_control": true,
+    "tls_minimum": "1.2",
+    "rate_limiting_required": true,
+    "request_limits_required": true,
+    "object_authorization_required": true,
+    "function_authorization_required": true,
+    "request_schema_validation_required": true,
+    "api_inventory_required": true,
+    "outbound_api_trust_review_required": true
+  },
+  "secrets": {
+    "managed_secret_store_required": true,
+    "hardcoded_secrets_prohibited": true,
+    "rotation_process_required": true,
+    "least_privilege_access_required": true
+  },
+  "supply_chain": {
+    "cyclonedx_version": "1.7",
+    "codeql_gate": true,
+    "dependency_audit_gate": true,
+    "sbom_generation_gate": true
+  },
+  "controls": [
+    {
+      "id": "APP-01",
+      "objective": "Enforce authentication and authorization at object, function and tenant boundaries.",
+      "maps_to": ["A01:2025", "A07:2025", "API1:2023", "API2:2023", "API3:2023", "API5:2023"]
+    },
+    {
+      "id": "APP-02",
+      "objective": "Harden API ingress, request handling, rate limits and exceptional conditions.",
+      "maps_to": ["A02:2025", "A05:2025", "A10:2025", "API4:2023", "API7:2023", "API8:2023"]
+    },
+    {
+      "id": "APP-03",
+      "objective": "Protect secrets, cryptographic material and data in transit.",
+      "maps_to": ["A04:2025", "A08:2025"]
+    },
+    {
+      "id": "APP-04",
+      "objective": "Maintain software inventory, dependency transparency and supply-chain scanning.",
+      "maps_to": ["A03:2025", "A08:2025", "API9:2023", "API10:2023"]
+    },
+    {
+      "id": "APP-05",
+      "objective": "Make threat modeling, security testing and logging evidence part of the delivery lifecycle.",
+      "maps_to": ["A06:2025", "A09:2025", "API6:2023"]
+    }
+  ],
+  "non_claims": [
+    "This reference does not establish OWASP compliance or certification.",
+    "A passing repository gate does not prove a deployed API or application is secure.",
+    "CodeQL and dependency audit results cover only the analyzed source and dependency context.",
+    "A generated SBOM is inventory evidence, not proof that components are vulnerability-free.",
+    "WAF, TLS and secret-management declarations require environment-specific deployment evidence."
+  ]
+}
