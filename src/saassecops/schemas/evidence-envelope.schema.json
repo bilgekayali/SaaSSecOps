@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bilgekayali.github.io/SaaSSecOps/schemas/evidence-envelope.schema.json",
+  "title": "SaaSSecOps Evidence Envelope",
+  "type": "object",
+  "required": ["schema_version", "payload_type", "payload_sha256", "source", "freshness", "signature"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "payload_type": {"type": "string", "minLength": 1},
+    "payload_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "source": {
+      "type": "object",
+      "required": ["repository", "git_sha"],
+      "properties": {
+        "repository": {"const": "bilgekayali/SaaSSecOps"},
+        "git_sha": {"type": "string", "pattern": "^[a-f0-9]{40}$"}
+      },
+      "additionalProperties": false
+    },
+    "freshness": {
+      "type": "object",
+      "required": ["issued_at", "revalidate_after", "expires_at"],
+      "properties": {
+        "issued_at": {"type": "string", "format": "date-time"},
+        "revalidate_after": {"type": "string", "format": "date-time"},
+        "expires_at": {"type": "string", "format": "date-time"}
+      },
+      "additionalProperties": false
+    },
+    "signature": {
+      "type": "object",
+      "required": ["algorithm", "key_id", "value_b64"],
+      "properties": {
+        "algorithm": {"const": "Ed25519"},
+        "key_id": {"type": "string", "minLength": 1},
+        "value_b64": {"type": "string", "minLength": 80}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
