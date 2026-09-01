@@ -1,0 +1,46 @@
+{
+  "architecture_id": "risky-saas-001",
+  "is_reference_only": true,
+  "tenant_isolation": {
+    "tenant_context_propagated": true,
+    "cross_tenant_deny_enforced": true,
+    "tenant_scoped_credentials": false,
+    "data_layer_tenant_enforcement": true
+  },
+  "iam": {
+    "federated_human_access": true,
+    "short_lived_workload_credentials": true,
+    "least_privilege_review": true,
+    "access_analyzer_enabled": true
+  },
+  "network": {
+    "private_application_tier": true,
+    "private_datastores": false,
+    "vpc_flow_logs_enabled": true
+  },
+  "data_protection": {
+    "tls_enforced": true,
+    "encryption_at_rest": true,
+    "customer_managed_kms_for_audit": true,
+    "managed_secrets": true
+  },
+  "logging": {
+    "cloudtrail_multi_region": true,
+    "cloudtrail_log_validation": false,
+    "private_versioned_audit_archive": true
+  },
+  "detection": {
+    "guardduty_enabled": false,
+    "security_hub_enabled": true,
+    "findings_response_route": true
+  },
+  "incident_response": {
+    "roles_defined": true,
+    "playbooks_exercised": true
+  },
+  "customer_trust": {
+    "architecture_evidence_maintained": true,
+    "questionnaire_answers_evidence_bound": false,
+    "exceptions_have_owners": true
+  }
+}
