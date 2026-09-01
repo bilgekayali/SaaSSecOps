@@ -7,6 +7,9 @@ on:
 permissions:
   contents: read
 
+env:
+  CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
 jobs:
   python:
     runs-on: ubuntu-latest
@@ -15,8 +18,10 @@ jobs:
       matrix:
         python-version: ["3.11", "3.12", "3.13"]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ env.CANDIDATE_SHA }}
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install package
@@ -43,6 +48,8 @@ jobs:
       - name: Customer trust fail-closed checks
         run: python scripts/build_customer_trust_summary.py --output artifacts/customer-trust-summary.json
       - name: Evidence signature freshness and revocation gates
+        env:
+          SAASSECOPS_SOURCE_SHA: ${{ env.CANDIDATE_SHA }}
         run: |
           python scripts/run_evidence_integrity.py
           saassecops validate artifacts/evidence-envelope.json --kind evidence-envelope
@@ -72,29 +79,48 @@ jobs:
         run: |
           python -m pip install build
           python -m build
+      - name: Clean wheel install and CLI smoke
+        if: matrix.python-version == '3.12'
+        run: |
+          python -m venv /tmp/saassecops-rc
+          /tmp/saassecops-rc/bin/python -m pip install dist/*.whl
+          cd /tmp
+          /tmp/saassecops-rc/bin/saassecops --version | grep "0.9.0"
+          /tmp/saassecops-rc/bin/saassecops contract-snapshot > /tmp/saassecops-contract-snapshot.json
+          /tmp/saassecops-rc/bin/saassecops validate "$GITHUB_WORKSPACE/examples/reference-architecture.json" --kind posture
+          /tmp/saassecops-rc/bin/saassecops digest "$GITHUB_WORKSPACE/contracts/v1-candidate.json"
       - name: Bind release artifacts to exact source
         if: matrix.python-version == '3.12'
         run: |
           python scripts/generate_release_manifest.py \
-            --version 0.8.0 \
-            --source-sha "$GITHUB_SHA" \
+            --version 0.9.0 \
+            --source-sha "$CANDIDATE_SHA" \
             --artifact-dir dist \
             --sbom artifacts/saassecops.cdx.json \
             --output artifacts/release-manifest.json
           saassecops validate artifacts/release-manifest.json --kind release-manifest
+      - name: Build release-candidate review
+        if: matrix.python-version == '3.12'
+        run: |
+          python scripts/verify_release_candidate.py \
+            --source-sha "$CANDIDATE_SHA" \
+            --output artifacts/v1-rc-review.json
       - name: Upload release evidence bundle
         if: matrix.python-version == '3.12'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: saassecops-release-evidence-${{ github.sha }}
+          name: saassecops-release-evidence-${{ env.CANDIDATE_SHA }}
           path: |
             dist/
             artifacts/saassecops.cdx.json
             artifacts/release-manifest.json
             artifacts/evidence-envelope.json
             artifacts/evidence-integrity-summary.json
+            artifacts/v1-rc-review.json
             contracts/v1-candidate.json
             contracts/v1-candidate.sha256
+            release/v1-rc-checklist.json
+            release/defect-register.json
           if-no-files-found: error
 
   terraform:
@@ -105,8 +131,12 @@ jobs:
           - infra/terraform
           - infra/organization
     steps:
-      - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ env.CANDIDATE_SHA }}
+      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
+        with:
+          terraform_version: "1.16.0"
       - name: Terraform init
         working-directory: ${{ matrix.directory }}
         run: terraform init -backend=false

@@ -1,0 +1,16 @@
+{
+  "entries": [],
+  "non_claim": "An empty register records no known repository-owned blocking defects at review time; it does not prove the absence of undiscovered defects or production vulnerabilities.",
+  "review_policy": {
+    "blocking_severities": [
+      "critical",
+      "high"
+    ],
+    "blocking_statuses": [
+      "open",
+      "accepted_for_fix"
+    ]
+  },
+  "schema_version": "1.0",
+  "scope": "repository-owned release defects"
+}
