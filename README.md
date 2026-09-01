@@ -5,17 +5,38 @@
 SaaSSecOps is an open-source reference architecture and local assurance toolkit for reasoning about security in a multi-tenant SaaS environment on AWS. It connects tenant isolation, identity, network boundaries, encryption, audit logging, threat detection, security posture management and customer-trust evidence in one inspectable project.
 
 > [!IMPORTANT]
-> This repository is a **reference architecture and portfolio demonstration**. It does not prove that any AWS environment has been deployed, independently assessed, penetration tested, certified or approved for production. The included Terraform is an account-scoped reference baseline and must be reviewed, adapted and tested before any real deployment.
+> This repository is a **reference architecture and portfolio demonstration**. It does not prove that any AWS environment has been deployed, independently assessed, penetration tested, certified or approved for production. The included Terraform and organization guardrails are reference baselines and must be reviewed, adapted and tested before any real deployment.
 
-Current package milestone: **v0.2.0 — Contract & Evidence Foundation**.
+Current package milestone: **v0.3.0 — AWS Multi-Account Security Baseline**.
 
 ## Summary
 
 Security assurance for SaaS customers is rarely just one control. A credible security story has to connect architecture, tenant isolation, IAM, network boundaries, encryption, telemetry, detection, incident response and evidence that can be explained to technical and non-technical stakeholders.
 
-SaaSSecOps models that connection explicitly through strict machine-readable contracts, deterministic assessment identity and evidence manifests.
+SaaSSecOps models that connection explicitly through strict machine-readable contracts, deterministic assessment identity, evidence manifests and a separated multi-account security/logging operating model.
 
-## Reference architecture
+## Multi-account security model
+
+```mermaid
+flowchart TB
+    M[Organizations management]
+    M --> SOU[Security OU]
+    M --> WOU[Workloads OU]
+    SOU --> ST[Security Tooling]
+    SOU --> LA[Log Archive]
+    WOU --> PROD[Workload Prod]
+    WOU --> NONPROD[Workload Nonprod]
+    ST -. delegated admin .-> CT[CloudTrail]
+    ST -. delegated admin .-> GD[GuardDuty]
+    ST -. delegated admin .-> SH[Security Hub CSPM]
+    CT --> LA
+    PROD --> CT
+    NONPROD --> CT
+```
+
+The management account is reserved for organization-level administration. Security operations are delegated to `security-tooling`, while centralized audit-log custody is separated into `log-archive`. See [Multi-Account Security Baseline](docs/MULTI_ACCOUNT_BASELINE.md).
+
+## Workload reference architecture
 
 ```mermaid
 flowchart LR
@@ -45,6 +66,9 @@ Production SaaS systems may use pooled, siloed or hybrid isolation depending on 
 - CloudTrail multi-Region logging and log-file validation.
 - GuardDuty and Security Hub detective controls.
 - Account-scoped Terraform reference for CloudTrail, KMS, S3 log archive, GuardDuty, Security Hub and Access Analyzer.
+- Multi-account reference contract covering management, Security OU, Workloads OU, Security Tooling and Log Archive boundaries.
+- Illustrative AWS Organizations SCPs with explicit opt-in Terraform attachment.
+- Delegated-administration guidance for CloudTrail, GuardDuty and Security Hub CSPM.
 - Strict JSON Schema contracts for posture, policy, assessment report and evidence manifest.
 - Deterministic assessment identity plus SHA-256 bindings for posture, policy and exact report bytes.
 - CLI commands for validation, assessment, file digests and contract snapshots.
@@ -63,6 +87,7 @@ Validate the declared posture and policy:
 ```bash
 saassecops validate examples/reference-architecture.json --kind posture
 saassecops validate policies/aws-saas-controls.json --kind policy
+saassecops validate architecture/multi-account-reference.json --kind multi-account
 ```
 
 Generate a report and exact-byte evidence manifest:
@@ -112,6 +137,8 @@ The design is informed by the AWS Well-Architected SaaS Lens, especially its ten
 
 - AWS SaaS Lens: https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/saas-lens.html
 - Tenant isolation: https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/tenant-isolation.html
+- AWS Organizations OU best practices: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_ous_best_practices.html
+- AWS Security Reference Architecture: https://docs.aws.amazon.com/prescriptive-guidance/latest/security-reference-architecture/welcome.html
 
 A passing local assessment does not establish AWS Well-Architected conformance, SOC 2 compliance, ISO 27001 certification, regulatory compliance, production security or customer acceptance.
 

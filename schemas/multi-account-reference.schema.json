@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/bilgekayali/SaaSSecOps/schemas/multi-account-reference.schema.json",
+  "title": "SaaSSecOps Multi-Account Reference",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "reference_version", "is_reference_only", "organization", "delegated_administration", "logging", "guardrails", "non_claims"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "reference_version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "is_reference_only": {"const": true},
+    "organization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["management_account", "organizational_units"],
+      "properties": {
+        "management_account": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "purpose", "workloads_allowed"],
+          "properties": {
+            "id": {"const": "management"},
+            "purpose": {"type": "string", "minLength": 1},
+            "workloads_allowed": {"const": false}
+          }
+        },
+        "organizational_units": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "accounts"],
+            "properties": {
+              "id": {"type": "string", "minLength": 1},
+              "accounts": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["id", "purpose"],
+                  "properties": {
+                    "id": {"type": "string", "minLength": 1},
+                    "purpose": {"type": "string", "minLength": 1}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "delegated_administration": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["service", "administrator_account", "scope"],
+        "properties": {
+          "service": {"enum": ["CloudTrail", "GuardDuty", "SecurityHubCSPM"]},
+          "administrator_account": {"const": "security-tooling"},
+          "scope": {"enum": ["organization", "organization-regional"]}
+        }
+      }
+    },
+    "logging": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["organization_trail", "management_account_included", "multi_region", "log_file_validation", "destination_account", "central_archive_versioning", "central_archive_object_lock_considered"],
+      "properties": {
+        "organization_trail": {"const": true},
+        "management_account_included": {"const": true},
+        "multi_region": {"const": true},
+        "log_file_validation": {"const": true},
+        "destination_account": {"const": "log-archive"},
+        "central_archive_versioning": {"const": true},
+        "central_archive_object_lock_considered": {"type": "boolean"}
+      }
+    },
+    "guardrails": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": {"enum": ["deny-leave-organization", "protect-security-services"]}
+    },
+    "non_claims": {"type": "array", "minItems": 4, "items": {"type": "string", "minLength": 1}}
+  }
+}

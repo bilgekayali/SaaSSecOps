@@ -6,9 +6,9 @@ SaaSSecOps will reach v1.0 when the repository exposes a stable, documented and 
 
 ## Milestones
 
-### v0.2.0 — Contract & Evidence Foundation
+### v0.2.0 — Contract & Evidence Foundation ✅
 
-Release gate:
+Completed release gate:
 
 - strict JSON Schema contracts for posture, policy, assessment report and evidence manifest;
 - deterministic assessment identity and exact input/policy/report SHA-256 bindings;

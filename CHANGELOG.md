@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.0
+
+- Added a machine-readable AWS multi-account reference contract and schema.
+- Added Security OU, Security Tooling, Log Archive and workload-account separation.
+- Added CloudTrail, GuardDuty and Security Hub CSPM delegated-administration guidance.
+- Added organization-trail and centralized log-custody reference model.
+- Added illustrative SCPs for organization membership and core security-service protection.
+- Added explicit opt-in Terraform for SCP creation/attachment and CI validation.
+- Expanded the public contract snapshot with the `multi-account` schema.
+
 ## 0.2.0
 
 - Added strict posture, policy, assessment-report and evidence-manifest contracts.

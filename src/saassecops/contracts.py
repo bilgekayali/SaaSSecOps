@@ -16,6 +16,7 @@ SCHEMA_FILES = {
     "policy": "control-policy.schema.json",
     "report": "assessment-report.schema.json",
     "manifest": "evidence-manifest.schema.json",
+    "multi-account": "multi-account-reference.schema.json",
 }
 
 
@@ -46,4 +47,5 @@ def contract_snapshot(version: str) -> dict[str, Any]:
         "schemas": {kind: schema_document(kind)["$id"] for kind in sorted(SCHEMA_FILES)},
         "assessment_schema_version": "1.0",
         "evidence_manifest_schema_version": "1.0",
+        "multi_account_schema_version": "1.0",
     }
