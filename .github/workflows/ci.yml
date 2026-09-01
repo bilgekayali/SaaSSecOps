@@ -7,6 +7,9 @@ on:
 permissions:
   contents: read
 
+env:
+  CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
 jobs:
   python:
     runs-on: ubuntu-latest
@@ -16,6 +19,8 @@ jobs:
         python-version: ["3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ env.CANDIDATE_SHA }}
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: ${{ matrix.python-version }}
@@ -43,6 +48,8 @@ jobs:
       - name: Customer trust fail-closed checks
         run: python scripts/build_customer_trust_summary.py --output artifacts/customer-trust-summary.json
       - name: Evidence signature freshness and revocation gates
+        env:
+          SAASSECOPS_SOURCE_SHA: ${{ env.CANDIDATE_SHA }}
         run: |
           python scripts/run_evidence_integrity.py
           saassecops validate artifacts/evidence-envelope.json --kind evidence-envelope
@@ -87,7 +94,7 @@ jobs:
         run: |
           python scripts/generate_release_manifest.py \
             --version 0.9.0 \
-            --source-sha "$GITHUB_SHA" \
+            --source-sha "$CANDIDATE_SHA" \
             --artifact-dir dist \
             --sbom artifacts/saassecops.cdx.json \
             --output artifacts/release-manifest.json
@@ -96,13 +103,13 @@ jobs:
         if: matrix.python-version == '3.12'
         run: |
           python scripts/verify_release_candidate.py \
-            --source-sha "$GITHUB_SHA" \
+            --source-sha "$CANDIDATE_SHA" \
             --output artifacts/v1-rc-review.json
       - name: Upload release evidence bundle
         if: matrix.python-version == '3.12'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: saassecops-release-evidence-${{ github.sha }}
+          name: saassecops-release-evidence-${{ env.CANDIDATE_SHA }}
           path: |
             dist/
             artifacts/saassecops.cdx.json
@@ -125,6 +132,8 @@ jobs:
           - infra/organization
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ env.CANDIDATE_SHA }}
       - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
         with:
           terraform_version: "1.16.0"
