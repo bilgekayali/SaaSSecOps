@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/bilgekayali/SaaSSecOps/schemas/tenant-isolation-reference.schema.json",
+  "title": "SaaSSecOps Tenant Isolation Reference",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "reference_version",
+    "is_reference_only",
+    "models",
+    "tenant_context",
+    "authorization",
+    "test_vectors",
+    "evidence",
+    "non_claims"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "reference_version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "is_reference_only": {"const": true},
+    "models": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "shared_components", "dedicated_components", "isolation_boundary"],
+        "properties": {
+          "id": {"enum": ["pool", "silo", "bridge"]},
+          "shared_components": {"type": "array", "items": {"type": "string", "minLength": 1}},
+          "dedicated_components": {"type": "array", "items": {"type": "string", "minLength": 1}},
+          "isolation_boundary": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "tenant_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "claim",
+        "caller_override_allowed",
+        "session_tag_key",
+        "propagation_required",
+        "transitive_if_role_chaining"
+      ],
+      "properties": {
+        "source": {"const": "authenticated_identity"},
+        "claim": {"const": "tenant-id"},
+        "caller_override_allowed": {"const": false},
+        "session_tag_key": {"const": "tenant-id"},
+        "propagation_required": {"const": true},
+        "transitive_if_role_chaining": {"const": true}
+      }
+    },
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "default_decision",
+        "principal_tag_key",
+        "data_layer_enforcement_required",
+        "missing_context_decision",
+        "tenant_mismatch_decision"
+      ],
+      "properties": {
+        "default_decision": {"const": "deny"},
+        "principal_tag_key": {"const": "aws:PrincipalTag/tenant-id"},
+        "data_layer_enforcement_required": {"const": true},
+        "missing_context_decision": {"const": "deny"},
+        "tenant_mismatch_decision": {"const": "deny"}
+      }
+    },
+    "test_vectors": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "principal_tenant", "resource_tenant", "action", "allowed_actions", "expected"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "principal_tenant": {"type": ["string", "null"]},
+          "resource_tenant": {"type": ["string", "null"]},
+          "action": {"type": "string", "minLength": 1},
+          "allowed_actions": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "expected": {"enum": ["allow", "deny"]}
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "description", "deployment_evidence_required"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "description": {"type": "string", "minLength": 1},
+          "deployment_evidence_required": {"type": "boolean"}
+        }
+      }
+    },
+    "non_claims": {
+      "type": "array",
+      "minItems": 4,
+      "items": {"type": "string", "minLength": 1}
+    }
+  }
+}

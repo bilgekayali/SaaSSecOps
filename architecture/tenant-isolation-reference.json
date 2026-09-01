@@ -1,0 +1,128 @@
+{
+  "schema_version": "1.0",
+  "reference_version": "0.4.0",
+  "is_reference_only": true,
+  "models": [
+    {
+      "id": "pool",
+      "shared_components": ["edge", "application-services", "data-platform"],
+      "dedicated_components": [],
+      "isolation_boundary": "Tenant identity is enforced logically across shared compute and storage."
+    },
+    {
+      "id": "silo",
+      "shared_components": ["identity", "onboarding", "deployment", "operations"],
+      "dedicated_components": ["application-stack", "tenant-data"],
+      "isolation_boundary": "Tenant resources are dedicated while the SaaS operating model remains unified."
+    },
+    {
+      "id": "bridge",
+      "shared_components": ["edge", "selected-services"],
+      "dedicated_components": ["selected-tenant-services", "selected-tenant-data"],
+      "isolation_boundary": "Isolation is selected per service or data domain using a controlled mix of pool and silo patterns."
+    }
+  ],
+  "tenant_context": {
+    "source": "authenticated_identity",
+    "claim": "tenant-id",
+    "caller_override_allowed": false,
+    "session_tag_key": "tenant-id",
+    "propagation_required": true,
+    "transitive_if_role_chaining": true
+  },
+  "authorization": {
+    "default_decision": "deny",
+    "principal_tag_key": "aws:PrincipalTag/tenant-id",
+    "data_layer_enforcement_required": true,
+    "missing_context_decision": "deny",
+    "tenant_mismatch_decision": "deny"
+  },
+  "test_vectors": [
+    {
+      "id": "same-tenant-read",
+      "principal_tenant": "tenant-a",
+      "resource_tenant": "tenant-a",
+      "action": "read",
+      "allowed_actions": ["read", "write"],
+      "expected": "allow"
+    },
+    {
+      "id": "same-tenant-write",
+      "principal_tenant": "tenant-b",
+      "resource_tenant": "tenant-b",
+      "action": "write",
+      "allowed_actions": ["read", "write"],
+      "expected": "allow"
+    },
+    {
+      "id": "cross-tenant-read",
+      "principal_tenant": "tenant-a",
+      "resource_tenant": "tenant-b",
+      "action": "read",
+      "allowed_actions": ["read", "write"],
+      "expected": "deny"
+    },
+    {
+      "id": "missing-principal-context",
+      "principal_tenant": null,
+      "resource_tenant": "tenant-a",
+      "action": "read",
+      "allowed_actions": ["read"],
+      "expected": "deny"
+    },
+    {
+      "id": "missing-resource-context",
+      "principal_tenant": "tenant-a",
+      "resource_tenant": null,
+      "action": "read",
+      "allowed_actions": ["read"],
+      "expected": "deny"
+    },
+    {
+      "id": "unauthorized-action",
+      "principal_tenant": "tenant-a",
+      "resource_tenant": "tenant-a",
+      "action": "delete",
+      "allowed_actions": ["read", "write"],
+      "expected": "deny"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "IDENTITY-01",
+      "description": "Authenticated identity contains an authoritative tenant identifier.",
+      "deployment_evidence_required": true
+    },
+    {
+      "id": "PROPAGATION-01",
+      "description": "Tenant context is propagated across every service boundary that accesses tenant resources.",
+      "deployment_evidence_required": true
+    },
+    {
+      "id": "STS-01",
+      "description": "Temporary AWS credentials are scoped with an approved tenant session tag or equivalent control.",
+      "deployment_evidence_required": true
+    },
+    {
+      "id": "DATA-01",
+      "description": "The data layer independently enforces the tenant boundary rather than trusting caller-supplied identifiers.",
+      "deployment_evidence_required": true
+    },
+    {
+      "id": "NEGATIVE-01",
+      "description": "Automated tests demonstrate cross-tenant requests fail closed.",
+      "deployment_evidence_required": true
+    },
+    {
+      "id": "LOG-01",
+      "description": "Authorization and tenant-context decisions are observable in security telemetry without exposing tenant secrets.",
+      "deployment_evidence_required": true
+    }
+  ],
+  "non_claims": [
+    "The reference decision engine is not the AWS IAM policy evaluation engine.",
+    "A valid reference contract does not prove deployed tenant isolation.",
+    "An IAM or STS example does not prove that application or data-layer authorization is correct.",
+    "Passing synthetic negative tests does not replace independent security testing of a deployed SaaS system."
+  ]
+}

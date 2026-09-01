@@ -1,0 +1,27 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ListOnlyTenantPrefix",
+      "Effect": "Allow",
+      "Action": ["s3:ListBucket"],
+      "Resource": ["arn:aws:s3:::REPLACE_WITH_TENANT_DATA_BUCKET"],
+      "Condition": {
+        "StringLike": {
+          "s3:prefix": [
+            "${aws:PrincipalTag/tenant-id}",
+            "${aws:PrincipalTag/tenant-id}/*"
+          ]
+        }
+      }
+    },
+    {
+      "Sid": "TenantObjectAccess",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:PutObject"],
+      "Resource": [
+        "arn:aws:s3:::REPLACE_WITH_TENANT_DATA_BUCKET/${aws:PrincipalTag/tenant-id}/*"
+      ]
+    }
+  ]
+}
