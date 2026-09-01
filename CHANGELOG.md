@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.8.0
+
+- Added a checked v1 public-contract candidate derived from the actual argparse command surface and public JSON Schema identities.
+- Added a canonical SHA-256 contract fingerprint and CI drift detection across Python 3.11–3.13.
+- Added stable-contract semantic invariants for assessment identity, exact-byte digests, evidence binding and fail-closed future-contract handling.
+- Added explicit SemVer compatibility rules for the candidate boundary.
+- Added migration guidance for consumers preparing for v1.
+- Added the stable contract descriptor and fingerprint to the release-evidence bundle.
+
 ## 0.7.0
 
 - Added Ed25519 signed evidence envelopes bound to canonical payload digests and exact Git source revisions.
