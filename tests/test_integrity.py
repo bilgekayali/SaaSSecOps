@@ -7,6 +7,7 @@ from saassecops.integrity import (
     IntegrityError,
     build_envelope,
     sign_envelope,
+    validate_key_registry_semantics,
     verify_envelope,
     verify_payload_binding,
 )
@@ -36,6 +37,7 @@ class IntegrityTests(unittest.TestCase):
 
     def test_valid_signature_payload_binding_and_freshness_states(self):
         envelope = self.envelope()
+        validate_key_registry_semantics(self.registry)
         verify_payload_binding(self.payload, envelope)
         self.assertEqual(verify_envelope(envelope, self.registry, observed_at="2026-09-10T00:00:00Z")["freshness"], "current")
         self.assertEqual(verify_envelope(envelope, self.registry, observed_at="2026-09-20T00:00:00Z")["freshness"], "revalidation_due")
@@ -58,6 +60,12 @@ class IntegrityTests(unittest.TestCase):
         envelope = self.envelope("test-ed25519-revoked", REVOKED_SEED)
         with self.assertRaises(IntegrityError):
             verify_envelope(envelope, self.registry, observed_at="2026-09-10T00:00:00Z")
+
+    def test_duplicate_key_id_is_rejected(self):
+        duplicate = json.loads(json.dumps(self.registry))
+        duplicate["keys"].append(json.loads(json.dumps(duplicate["keys"][0])))
+        with self.assertRaises(IntegrityError):
+            validate_key_registry_semantics(duplicate)
 
     def test_signature_is_deterministic_for_same_key_and_envelope(self):
         first = self.envelope()
