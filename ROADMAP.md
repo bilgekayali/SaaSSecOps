@@ -19,46 +19,37 @@ SaaSSecOps reaches v1.0 when it exposes a stable, documented and machine-verifia
 - OWASP 2025/2023 mappings, secure-SDLC evidence, CodeQL, dependency audit, CycloneDX 1.7 and vulnerability evidence.
 
 ### v0.6.0 — Customer Trust & Security GTM ✅
-- evidence-bound questionnaire, assurance pack, trust-exception register, responsibility matrix and fail-closed customer-answer rules.
+- evidence-bound questionnaire, architecture assurance pack, exception register, responsibility matrix and fail-closed customer-answer rules.
 
 ### v0.7.0 — Evidence Integrity & Automation ✅
-- Ed25519 evidence envelopes, payload/source binding, signing-key lifecycle/revocation, evidence freshness, release checksums and build provenance workflow.
+- Ed25519 evidence envelopes, key lifecycle/revocation, freshness decisions, exact-source release manifest, SBOM/release evidence bundle and tagged build provenance.
 
 ### v0.8.0 — Stable Public Contract Candidate ✅
-
-Completed release gate:
-
-- actual argparse command/argument surface projected into a checked public descriptor;
-- public JSON Schema `$id` values frozen into the candidate descriptor;
-- core assessment/digest/evidence semantics included in the stable boundary;
-- canonical SHA-256 contract fingerprint checked into the repository;
-- CI verifies descriptor and fingerprint on Python 3.11–3.13;
-- SemVer compatibility policy updated for the candidate boundary;
-- migration guidance added for consumers preparing for v1;
-- release evidence bundle includes the checked candidate descriptor and fingerprint.
+- actual CLI/parser projection, frozen schema identities, SemVer candidate policy, migration guidance and SHA-256 contract fingerprint.
 
 ### v0.9.0 — v1 Release Candidate
 
 Release gate:
 
-- full documentation and architecture review;
-- threat-model review across cloud, tenant, application, trust and evidence layers;
-- clean wheel install and CLI smoke tests in an isolated environment;
-- stable-contract fingerprint verified against one exact candidate SHA;
-- Terraform, dependency audit, CodeQL, SBOM, signature/integrity and contract gates green on the same SHA;
-- no unresolved repository-owned critical/high defects;
-- v1 release checklist completed and source-bound to the candidate SHA.
+- expanded threat-model review across cloud/organization, tenant isolation, AppSec/API, software supply chain, customer trust, evidence integrity and incident response;
+- isolated wheel install and CLI smoke tests outside the source checkout;
+- machine-readable release-candidate checklist and exact-SHA review artifact;
+- repository-owned critical/high blocker register with fail-closed release policy;
+- stable-contract fingerprint retained unchanged from v0.8;
+- Python 3.11–3.13, Terraform 1.16.0, dependency, SBOM and release-evidence gates green on one candidate SHA;
+- CodeQL green on the same candidate SHA;
+- critical GitHub Actions pinned to reviewed commit SHAs.
 
 ### v1.0.0 — Stable Security Reference
 
 Release gate:
 
-- no new breaking public-contract change relative to the approved v0.9 candidate;
-- package/documentation/version aligned at `1.0.0`;
-- stable-contract fingerprint retained or intentionally versioned with documented migration;
+- all v0.2–v0.9 control boundaries retained;
+- version, schemas, CLI and documentation aligned at `1.0.0`;
+- stable-contract fingerprint verified;
 - release artifacts and provenance bound to the exact tagged source revision;
-- all mandatory release gates green on the tagged commit;
-- explicit stable-reference non-claims retained.
+- all mandatory CI/release gates green on the tagged commit;
+- explicit statement that stable reference status is not a deployment, certification, compliance or independent-assessment claim.
 
 ## v1.0 public surface target
 
@@ -66,9 +57,6 @@ Release gate:
 - `saassecops assess`
 - `saassecops digest`
 - `saassecops contract-snapshot`
-- `saassecops --version`
-- versioned public JSON Schemas
+- versioned JSON Schemas
 - deterministic assessment/evidence identity rules
-- exact-byte digest and evidence binding semantics
-
-Reference Terraform, diagrams, documentation prose, release scripts and internal Python modules remain non-API surfaces unless explicitly promoted.
+- reference Terraform and architecture documentation as non-API examples
