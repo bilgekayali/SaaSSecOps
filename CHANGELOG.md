@@ -1,13 +1,23 @@
 # Changelog
 
+## 0.9.0
+
+- Added v1 release-candidate review and machine-readable checklist.
+- Added clean wheel installation and CLI smoke tests outside the source checkout.
+- Expanded the threat model across cloud, tenant, AppSec/API, supply-chain, customer-trust, evidence-integrity and incident-response domains.
+- Added a repository-owned blocker register that fails the release review on known open critical/high defects.
+- Added exact-SHA release-candidate review artifacts to the CI evidence bundle.
+- Pinned critical GitHub Actions to reviewed commit SHAs and moved CodeQL to v4.
+- Pinned Terraform validation to stable Terraform 1.16.0.
+- Retained the v0.8 stable public-contract fingerprint unchanged.
+
 ## 0.8.0
 
-- Added a checked v1 public-contract candidate derived from the actual argparse command surface and public JSON Schema identities.
-- Added a canonical SHA-256 contract fingerprint and CI drift detection across Python 3.11–3.13.
-- Added stable-contract semantic invariants for assessment identity, exact-byte digests, evidence binding and fail-closed future-contract handling.
-- Added explicit SemVer compatibility rules for the candidate boundary.
-- Added migration guidance for consumers preparing for v1.
-- Added the stable contract descriptor and fingerprint to the release-evidence bundle.
+- Added an argparse-derived v1 public-contract candidate.
+- Added a checked contract descriptor and canonical SHA-256 fingerprint.
+- Added CI drift detection for CLI/schema identities and core evidence semantics.
+- Formalized SemVer compatibility rules and v0.x-to-v1 migration guidance.
+- Added the stable candidate descriptor/fingerprint to release evidence.
 
 ## 0.7.0
 
