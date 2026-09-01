@@ -15,7 +15,7 @@ v0.8 freezes the first candidate for the v1 public contract. The actual argparse
 
 The candidate fingerprint is:
 
-`sha256:cdeb7d19ad53914279b8741c0f97ec486119f1a483458dd9f9ba1549ecc25094`
+`sha256:d12b26f57701507934e88ed561546255694d72485b6c30dc29bab2944847cf94`
 
 ## Stable contract boundary
 
