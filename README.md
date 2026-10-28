@@ -9,6 +9,16 @@ SaaSSecOps is an open-source reference architecture and local assurance toolkit 
 
 Current package version: **v1.0.0 — Stable Security Reference**.
 
+## Executive overview — 30 seconds
+
+**Problem:** Multi-tenant SaaS platforms must reason explicitly about tenant isolation, identity, application/API boundaries and trustworthy control evidence.
+
+**Reference solution:** An AWS-oriented security reference architecture with inspectable policies, schemas and local assurance tooling.
+
+**Inspect the work:** [Source code](src/) · [Automated tests](tests/) · [Schemas](schemas/).
+
+**Status and limits:** v1.0.0 **stable security reference**, not evidence that an AWS tenant environment has been deployed, independently tested, certified or approved for production.
+
 ## Summary
 
 v1.0.0 promotes the v0.9 release candidate to the stable public boundary without changing the checked CLI/schema/evidence contract established in v0.8. The release is verified through package tests, fail-closed security vectors, clean wheel installation, exact-source evidence, release blocker review and tagged build provenance.
